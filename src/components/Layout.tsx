@@ -24,9 +24,12 @@ export default function Layout() {
 
   return (
     <>
+      <a className="skip-link" href="#main">
+        Перейти к содержимому
+      </a>
       <Aurora />
       <Header />
-      <main>
+      <main id="main">
         <Outlet />
       </main>
       <Footer />

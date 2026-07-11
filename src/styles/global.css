@@ -20,6 +20,8 @@
   --stroke-bright: rgba(255, 255, 255, 0.18);
 
   --grad-accent: linear-gradient(100deg, var(--cyan), var(--violet) 55%, var(--magenta));
+  /* Текст поверх акцентного градиента: ≥4.5:1 даже на фиолетовой середине */
+  --on-accent: #04070d;
 
   --font-display: 'Unbounded', system-ui, sans-serif;
   --font-body: 'Manrope', system-ui, sans-serif;
@@ -73,6 +75,34 @@ button {
   background: none;
   border: none;
   cursor: pointer;
+}
+
+/* Убирает ~300мс задержку тапа на мобильных браузерах */
+a,
+button,
+input,
+select,
+textarea {
+  touch-action: manipulation;
+}
+
+/* Skip-link: скрыт до фокуса с клавиатуры */
+.skip-link {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 200;
+  padding: 0.7rem 1.2rem;
+  border-radius: 999px;
+  background: var(--bg-elev);
+  border: 1px solid var(--stroke-bright);
+  font-weight: 700;
+  transform: translateY(-200%);
+  transition: transform 0.2s var(--ease-out);
+}
+
+.skip-link:focus-visible {
+  transform: none;
 }
 
 :focus-visible {
@@ -296,7 +326,7 @@ p {
 }
 
 .btn--primary {
-  color: #07121a;
+  color: var(--on-accent);
   background: var(--grad-accent);
   background-size: 160% 100%;
   box-shadow: 0 10px 32px -10px rgba(34, 211, 238, 0.45);
@@ -762,7 +792,7 @@ p {
   place-items: center;
   font-weight: 800;
   font-size: 0.95rem;
-  color: #07121a;
+  color: var(--on-accent);
   background: var(--grad-accent);
 }
 
@@ -846,7 +876,7 @@ p {
 
 .footer__col a {
   display: block;
-  padding: 0.3rem 0;
+  padding: 0.65rem 0;
   color: var(--ink-soft);
   font-size: 0.94rem;
   transition: color 0.3s;
@@ -909,7 +939,7 @@ p {
   padding: 0.3rem 1rem;
   border-radius: 999px;
   background: var(--grad-accent);
-  color: #07121a;
+  color: var(--on-accent);
   font-size: 0.76rem;
   font-weight: 800;
   letter-spacing: 0.06em;
@@ -1116,7 +1146,7 @@ p {
   display: grid;
   place-items: center;
   background: var(--grad-accent);
-  color: #07121a;
+  color: var(--on-accent);
   box-shadow: 0 14px 40px -8px rgba(139, 92, 246, 0.6);
   transition: transform 0.35s var(--ease-out), box-shadow 0.35s;
 }
@@ -1187,7 +1217,7 @@ p {
   display: grid;
   place-items: center;
   background: var(--grad-accent);
-  color: #07121a;
+  color: var(--on-accent);
 }
 
 .chat__avatar svg {
@@ -1219,8 +1249,8 @@ p {
 
 .chat__close {
   margin-left: auto;
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   border-radius: 10px;
   display: grid;
   place-items: center;
@@ -1304,7 +1334,8 @@ p {
 }
 
 .chat__quick button {
-  padding: 0.45rem 0.9rem;
+  min-height: 44px;
+  padding: 0.5rem 1rem;
   border-radius: 999px;
   border: 1px solid rgba(34, 211, 238, 0.4);
   color: var(--cyan);
@@ -1344,12 +1375,14 @@ p {
 .chat__send {
   width: 44px;
   height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   flex: none;
   border-radius: 50%;
   display: grid;
   place-items: center;
   background: var(--grad-accent);
-  color: #07121a;
+  color: var(--on-accent);
   transition: transform 0.25s var(--ease-out), opacity 0.25s;
 }
 
