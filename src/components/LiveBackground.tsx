@@ -163,19 +163,32 @@ export default function LiveBackground() {
       mouse.x = -9999
       mouse.y = -9999
     }
+    // Пауза анимации в скрытой вкладке — не жжём CPU/батарею
+    const onVisibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(raf)
+        raf = 0
+      } else if (!reduce && !raf) {
+        raf = requestAnimationFrame(loop)
+      }
+    }
     window.addEventListener('resize', build)
     if (!reduce) {
       window.addEventListener('pointermove', onMove, { passive: true })
-      window.addEventListener('pointerout', onLeave)
+      // mouseleave на документе — надёжный сигнал «курсор ушёл со страницы»
+      // (в отличие от pointerout, который срабатывает на границах элементов)
+      document.addEventListener('mouseleave', onLeave)
       window.addEventListener('blur', onLeave)
+      document.addEventListener('visibilitychange', onVisibility)
     }
 
     return () => {
       cancelAnimationFrame(raf)
       window.removeEventListener('resize', build)
       window.removeEventListener('pointermove', onMove)
-      window.removeEventListener('pointerout', onLeave)
+      document.removeEventListener('mouseleave', onLeave)
       window.removeEventListener('blur', onLeave)
+      document.removeEventListener('visibilitychange', onVisibility)
     }
   }, [theme])
 
