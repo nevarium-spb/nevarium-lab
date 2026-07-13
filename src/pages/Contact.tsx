@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { usePageMeta } from '../hooks/usePageMeta'
 import Reveal from '../components/Reveal'
-import { IconMail, IconSend, IconClock, IconCheck } from '../data/icons'
+import { IconMail, IconMax, IconClock, IconCheck } from '../data/icons'
 
 export default function Contact() {
   usePageMeta(
@@ -50,7 +50,7 @@ export default function Contact() {
               </div>
               <div className="contact-info__row">
                 <div className="card__icon">
-                  <IconSend />
+                  <IconMax />
                 </div>
                 <div>
                   <div className="contact-info__label">Max</div>

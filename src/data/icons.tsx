@@ -43,6 +43,19 @@ export const IconChat = ({ size = 24 }: IconProps) => (
   </svg>
 )
 
+export const IconMax = ({ size = 24 }: IconProps) => (
+  <svg {...base(size)} fill="currentColor" stroke="none">
+    <defs>
+      <linearGradient id="max-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="currentColor" />
+        <stop offset="100%" stopColor="currentColor" stopOpacity="0.6" />
+      </linearGradient>
+    </defs>
+    <circle cx="12" cy="12" r="10" fill="url(#max-grad)" opacity="0.8" />
+    <circle cx="12" cy="11" r="5.5" fill="white" />
+  </svg>
+)
+
 export const IconPen = ({ size = 24 }: IconProps) => (
   <svg {...base(size)}>
     <path d="m14.5 4.5 5 5L8 21H3v-5L14.5 4.5Z" />
