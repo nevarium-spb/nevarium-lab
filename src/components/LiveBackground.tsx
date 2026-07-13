@@ -25,9 +25,9 @@ export default function LiveBackground() {
     const cLink = light ? '79, 70, 229' : '124, 138, 255'
     const cMouse = light ? '37, 99, 235' : '56, 189, 248'
 
-    const LINK = 165 // радиус связей точка-точка
-    const MOUSE_R = 240 // радиус влияния курсора
-    const PUSH = 72 // макс. смещение точки от курсора, px
+    const LINK = 150 // радиус связей точка-точка
+    const MOUSE_R = 230 // радиус влияния курсора
+    const PUSH = 55 // макс. смещение точки от курсора, px
 
     let w = 0
     let h = 0
@@ -43,7 +43,7 @@ export default function LiveBackground() {
       canvas.width = w * dpr
       canvas.height = h * dpr
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      const count = Math.min(150, Math.max(50, Math.floor((w * h) / 11000)))
+      const count = Math.min(105, Math.max(40, Math.floor((w * h) / 15000)))
       ps = Array.from({ length: count }, () => ({
         x: Math.random() * w,
         y: Math.random() * h,
@@ -81,8 +81,8 @@ export default function LiveBackground() {
         p.oy += (toy - p.oy) * 0.12
       }
 
-      // Линии между точками
-      ctx.lineWidth = 1.3
+      // Линии между точками — приглушённый ambient-слой
+      ctx.lineWidth = 1
       for (let i = 0; i < ps.length; i++) {
         const a = ps[i]
         const ax = a.x + a.ox
@@ -93,7 +93,7 @@ export default function LiveBackground() {
           const by = b.y + b.oy
           const dist = Math.hypot(ax - bx, ay - by)
           if (dist < LINK) {
-            const alpha = (1 - dist / LINK) * (light ? 0.5 : 0.62)
+            const alpha = (1 - dist / LINK) * (light ? 0.3 : 0.34)
             ctx.strokeStyle = `rgba(${cLink}, ${alpha})`
             ctx.beginPath()
             ctx.moveTo(ax, ay)
@@ -103,13 +103,13 @@ export default function LiveBackground() {
         }
       }
 
-      // Яркие линии от курсора к ближним точкам
+      // Линии от курсора к ближним точкам (только у указателя — контенту не мешают)
       if (mouse.on) {
-        ctx.lineWidth = 2
+        ctx.lineWidth = 1.5
         for (const p of ps) {
           const d = Math.hypot(p.x + p.ox - mouse.x, p.y + p.oy - mouse.y)
           if (d < MOUSE_R) {
-            ctx.strokeStyle = `rgba(${cMouse}, ${(1 - d / MOUSE_R) * 0.95})`
+            ctx.strokeStyle = `rgba(${cMouse}, ${(1 - d / MOUSE_R) * 0.7})`
             ctx.beginPath()
             ctx.moveTo(mouse.x, mouse.y)
             ctx.lineTo(p.x + p.ox, p.y + p.oy)
@@ -118,29 +118,31 @@ export default function LiveBackground() {
         }
       }
 
-      // Узлы со свечением
-      ctx.shadowBlur = light ? 4 : 9
+      // Узлы — лёгкое свечение только у курсора
       for (const p of ps) {
         const px = p.x + p.ox
         const py = p.y + p.oy
         const near = mouse.on && Math.hypot(px - mouse.x, py - mouse.y) < MOUSE_R
-        ctx.shadowColor = near ? `rgba(${cMouse}, 0.9)` : `rgba(${cNode}, 0.7)`
+        if (near) {
+          ctx.shadowColor = `rgba(${cMouse}, 0.8)`
+          ctx.shadowBlur = 6
+        } else {
+          ctx.shadowBlur = 0
+        }
         ctx.beginPath()
-        ctx.arc(px, py, near ? 3.4 : 2.4, 0, Math.PI * 2)
-        ctx.fillStyle = near ? `rgba(${cMouse}, 1)` : `rgba(${cNode}, ${light ? 0.8 : 1})`
-        ctx.fill()
-      }
-
-      // Узелок под самим курсором
-      if (mouse.on) {
-        ctx.shadowColor = `rgba(${cMouse}, 1)`
-        ctx.shadowBlur = 14
-        ctx.beginPath()
-        ctx.arc(mouse.x, mouse.y, 4, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(${cMouse}, 1)`
+        ctx.arc(px, py, near ? 2.6 : 1.9, 0, Math.PI * 2)
+        ctx.fillStyle = near ? `rgba(${cMouse}, 0.95)` : `rgba(${cNode}, ${light ? 0.52 : 0.62})`
         ctx.fill()
       }
       ctx.shadowBlur = 0
+
+      // Узелок под самим курсором
+      if (mouse.on) {
+        ctx.beginPath()
+        ctx.arc(mouse.x, mouse.y, 3, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(${cMouse}, 0.85)`
+        ctx.fill()
+      }
     }
 
     let raf = 0
