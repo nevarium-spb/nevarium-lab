@@ -292,8 +292,8 @@ p {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(129, 140, 248, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(129, 140, 248, 0.06) 1px, transparent 1px);
+    linear-gradient(rgba(129, 140, 248, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(129, 140, 248, 0.09) 1px, transparent 1px);
   background-size: 64px 64px;
   mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, black 30%, transparent 75%);
   -webkit-mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, black 30%, transparent 75%);
@@ -302,35 +302,35 @@ p {
 .orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(90px);
-  opacity: 0.6;
+  filter: blur(80px);
+  opacity: 0.85;
   will-change: transform;
 }
 
 .orb--cyan {
-  width: 46vw;
-  height: 46vw;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.34), transparent 65%);
-  top: -12%;
-  left: -10%;
+  width: 48vw;
+  height: 48vw;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.5), transparent 66%);
+  top: -14%;
+  left: -12%;
   animation: drift-a 26s ease-in-out infinite alternate;
 }
 
 .orb--violet {
-  width: 52vw;
-  height: 52vw;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.34), transparent 65%);
-  top: 18%;
+  width: 54vw;
+  height: 54vw;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.5), transparent 66%);
+  top: 16%;
   right: -18%;
   animation: drift-b 32s ease-in-out infinite alternate;
 }
 
 .orb--magenta {
-  width: 40vw;
-  height: 40vw;
-  background: radial-gradient(circle, rgba(79, 70, 229, 0.3), transparent 65%);
-  bottom: -16%;
-  left: 22%;
+  width: 42vw;
+  height: 42vw;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.42), transparent 66%);
+  bottom: -18%;
+  left: 20%;
   animation: drift-c 38s ease-in-out infinite alternate;
 }
 
