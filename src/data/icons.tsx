@@ -13,6 +13,19 @@ const base = (size: number) => ({
   'aria-hidden': true,
 })
 
+export const IconSun = ({ size = 24 }: IconProps) => (
+  <svg {...base(size)}>
+    <circle cx="12" cy="12" r="4.2" />
+    <path d="M12 2v2.5M12 19.5V22M4.5 4.5l1.8 1.8M17.7 17.7l1.8 1.8M2 12h2.5M19.5 12H22M4.5 19.5l1.8-1.8M17.7 6.3l1.8-1.8" />
+  </svg>
+)
+
+export const IconMoon = ({ size = 24 }: IconProps) => (
+  <svg {...base(size)}>
+    <path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z" />
+  </svg>
+)
+
 export const IconBot = ({ size = 24 }: IconProps) => (
   <svg {...base(size)}>
     <rect x="4" y="8" width="16" height="11" rx="3" />

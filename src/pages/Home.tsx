@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { usePageMeta } from '../hooks/usePageMeta'
 import Reveal from '../components/Reveal'
 import SectionHead from '../components/SectionHead'
-import NeuralViz from '../components/NeuralViz'
+import HeroPanel from '../components/HeroPanel'
 import Stat from '../components/Stat'
 import CTABand from '../components/CTABand'
 import { services, processSteps } from '../data/content'
@@ -72,13 +72,15 @@ export default function Home() {
                   Смотреть кейсы
                 </Link>
               </div>
-              <p className="hero__note">
-                30 минут · находим 2–3 точки, где ИИ окупится в первый месяц
-              </p>
+              <div className="trust">
+                <span>Метрика в договоре</span>
+                <span>Обучение команды</span>
+                <span>Поддержка после сдачи</span>
+              </div>
             </div>
           </Reveal>
           <Reveal delay={0.15} className="hero__visual">
-            <NeuralViz />
+            <HeroPanel />
           </Reveal>
         </div>
       </section>

@@ -3,7 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#07080f" />
+    <meta name="theme-color" content="#0d1030" />
+    <script>
+      // Тема до первой отрисовки — без мигания
+      (function () {
+        try {
+          var t = localStorage.getItem('nevarium-theme');
+          document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
     <meta
       name="description"
       content="Невариум ЛАБ ИИ — лаборатория внедрения искусственного интеллекта в бизнес: GPT-ассистенты, чат-боты, ИИ-контент, автоматизация в таблицах, обучение команд."
@@ -18,7 +29,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Open+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <title>Невариум ЛАБ ИИ — внедряем ИИ в бизнес</title>

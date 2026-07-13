@@ -1,40 +1,90 @@
 /* ============================================================
-   Невариум ЛАБ ИИ — дизайн-система «Vizor»
-   Тёмная лаборатория: aurora-градиенты + глассморфизм
+   Невариум ЛАБ ИИ — дизайн-система «Индиго Лайв»
+   Глубокий индиго + живой фон + глассморфизм. Тёмная база,
+   светлая тема через [data-theme="light"].
    ============================================================ */
 
-:root {
-  --bg: #07080f;
-  --bg-elev: #0b0d17;
-  --ink: #eef0fb;
-  --ink-soft: rgba(238, 240, 251, 0.72);
-  --ink-faint: rgba(238, 240, 251, 0.55);
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
 
-  --cyan: #22d3ee;
-  --violet: #8b5cf6;
-  --magenta: #e879f9;
+  --bg: #0d1030;
+  --bg-elev: #161a44;
+  --ink: #eef1ff;
+  --ink-soft: rgba(238, 241, 255, 0.68);
+  --ink-faint: rgba(238, 241, 255, 0.46);
 
-  --glass: rgba(255, 255, 255, 0.045);
-  --glass-strong: rgba(255, 255, 255, 0.08);
+  /* Базовая индиго-палитра */
+  --sky: #38bdf8;
+  --indigo: #6366f1;
+  --cobalt: #4f46e5;
+  --emerald: #10b981;
+
+  /* Совместимость: старые имена -> новая палитра */
+  --cyan: var(--sky);
+  --violet: var(--indigo);
+  --magenta: var(--cobalt);
+
+  --glass: rgba(255, 255, 255, 0.05);
+  --glass-strong: rgba(255, 255, 255, 0.09);
   --stroke: rgba(255, 255, 255, 0.1);
-  --stroke-bright: rgba(255, 255, 255, 0.18);
+  --stroke-bright: rgba(255, 255, 255, 0.2);
 
-  --grad-accent: linear-gradient(100deg, var(--cyan), var(--violet) 55%, var(--magenta));
-  /* Текст поверх акцентного градиента: ≥4.5:1 даже на фиолетовой середине */
-  --on-accent: #04070d;
+  /* Яркий градиент для текста/иконок на ТЁМНОМ фоне */
+  --grad-accent: linear-gradient(100deg, #38bdf8, #6366f1 58%, #818cf8);
+  /* Плотный градиент для заливки кнопок — белый текст ≥4.5:1 по всей длине */
+  --grad-btn: linear-gradient(100deg, #4f46e5, #4338ca);
+  --on-accent: #ffffff;
 
-  --font-display: 'Unbounded', system-ui, sans-serif;
-  --font-body: 'Manrope', system-ui, sans-serif;
+  --ring: rgba(129, 140, 248, 0.55);
+  --shadow-glass: 0 24px 60px -28px rgba(0, 0, 0, 0.7);
+  --shadow-panel: 0 30px 70px -30px rgba(0, 0, 0, 0.75);
 
-  --radius-lg: 24px;
-  --radius-md: 16px;
-  --radius-sm: 10px;
+  /* Полупрозрачные поверхности (адаптируются под тему) */
+  --header-bg: rgba(13, 16, 48, 0.72);
+  --drawer-bg: rgba(13, 16, 48, 0.92);
+  --footer-bg: rgba(9, 11, 34, 0.55);
+  --chat-bg: rgba(22, 26, 68, 0.85);
+
+  --font-display: 'Poppins', system-ui, sans-serif;
+  --font-body: 'Open Sans', system-ui, sans-serif;
+
+  --radius-lg: 28px;
+  --radius-md: 20px;
+  --radius-sm: 14px;
 
   --container: 1200px;
   --header-h: 72px;
+  --topbar-h: 42px;
 
-  --shadow-glass: 0 18px 50px -20px rgba(0, 0, 0, 0.6);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------- Светлая тема ---------- */
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #eef1fb;
+  --bg-elev: #ffffff;
+  --ink: #171a3a;
+  --ink-soft: rgba(23, 26, 58, 0.72);
+  --ink-faint: rgba(23, 26, 58, 0.52);
+
+  --glass: rgba(255, 255, 255, 0.68);
+  --glass-strong: rgba(255, 255, 255, 0.86);
+  --stroke: rgba(23, 26, 58, 0.1);
+  --stroke-bright: rgba(23, 26, 58, 0.18);
+
+  /* На светлом фоне яркий sky нечитаем как текст — берём плотнее */
+  --grad-accent: linear-gradient(100deg, #4f46e5, #7c3aed 60%, #6366f1);
+
+  --shadow-glass: 0 20px 50px -26px rgba(30, 41, 120, 0.28);
+  --shadow-panel: 0 30px 70px -34px rgba(30, 41, 120, 0.3);
+
+  --header-bg: rgba(238, 241, 251, 0.82);
+  --drawer-bg: rgba(238, 241, 251, 0.94);
+  --footer-bg: rgba(255, 255, 255, 0.6);
+  --chat-bg: rgba(255, 255, 255, 0.9);
 }
 
 *,
@@ -196,7 +246,7 @@ p {
   border-radius: 2px;
 }
 
-/* ---------- Aurora-фон ---------- */
+/* ---------- Живой фон «Индиго Лайв» ---------- */
 
 .aurora {
   position: fixed;
@@ -204,24 +254,46 @@ p {
   z-index: -2;
   overflow: hidden;
   background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(139, 92, 246, 0.14), transparent 70%),
+    radial-gradient(ellipse 80% 55% at 50% -10%, rgba(79, 70, 229, 0.35), transparent 70%),
     var(--bg);
 }
 
-.aurora::after {
-  content: '';
+/* Медленный конический «прожектор», создающий ощущение живого света */
+.aurora__sweep {
+  position: absolute;
+  top: -40%;
+  left: 50%;
+  width: 120vw;
+  height: 120vw;
+  transform: translateX(-50%);
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(56, 189, 248, 0.1) 60deg,
+    transparent 140deg,
+    rgba(129, 140, 248, 0.12) 220deg,
+    transparent 300deg
+  );
+  mask-image: radial-gradient(circle at 50% 50%, black 0%, transparent 60%);
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, black 0%, transparent 60%);
+  animation: sweep 40s linear infinite;
+  will-change: transform;
+}
+
+/* Холст-созвездие (canvas) поверх свечений */
+.aurora__canvas {
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
-  pointer-events: none;
+  width: 100%;
+  height: 100%;
 }
 
 .aurora__grid {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(rgba(129, 140, 248, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(129, 140, 248, 0.06) 1px, transparent 1px);
   background-size: 64px 64px;
   mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, black 30%, transparent 75%);
   -webkit-mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, black 30%, transparent 75%);
@@ -231,14 +303,14 @@ p {
   position: absolute;
   border-radius: 50%;
   filter: blur(90px);
-  opacity: 0.5;
+  opacity: 0.6;
   will-change: transform;
 }
 
 .orb--cyan {
   width: 46vw;
   height: 46vw;
-  background: radial-gradient(circle, rgba(34, 211, 238, 0.32), transparent 65%);
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.34), transparent 65%);
   top: -12%;
   left: -10%;
   animation: drift-a 26s ease-in-out infinite alternate;
@@ -247,19 +319,39 @@ p {
 .orb--violet {
   width: 52vw;
   height: 52vw;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.3), transparent 65%);
-  top: 20%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.34), transparent 65%);
+  top: 18%;
   right: -18%;
   animation: drift-b 32s ease-in-out infinite alternate;
 }
 
 .orb--magenta {
-  width: 38vw;
-  height: 38vw;
-  background: radial-gradient(circle, rgba(232, 121, 249, 0.22), transparent 65%);
-  bottom: -14%;
-  left: 24%;
+  width: 40vw;
+  height: 40vw;
+  background: radial-gradient(circle, rgba(79, 70, 229, 0.3), transparent 65%);
+  bottom: -16%;
+  left: 22%;
   animation: drift-c 38s ease-in-out infinite alternate;
+}
+
+:root[data-theme='light'] .aurora {
+  background:
+    radial-gradient(ellipse 80% 55% at 50% -10%, rgba(99, 102, 241, 0.16), transparent 70%),
+    var(--bg);
+}
+
+:root[data-theme='light'] .orb {
+  opacity: 0.35;
+}
+
+:root[data-theme='light'] .aurora__grid {
+  background-image:
+    linear-gradient(rgba(79, 70, 229, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79, 70, 229, 0.05) 1px, transparent 1px);
+}
+
+@keyframes sweep {
+  to { transform: translateX(-50%) rotate(360deg); }
 }
 
 @keyframes drift-a {
@@ -327,15 +419,15 @@ p {
 
 .btn--primary {
   color: var(--on-accent);
-  background: var(--grad-accent);
+  background: var(--grad-btn);
   background-size: 160% 100%;
-  box-shadow: 0 10px 32px -10px rgba(34, 211, 238, 0.45);
+  box-shadow: 0 12px 34px -12px rgba(79, 70, 229, 0.7);
 }
 
 .btn--primary:hover {
   background-position: 90% 0;
   transform: translateY(-2px);
-  box-shadow: 0 16px 40px -10px rgba(139, 92, 246, 0.55);
+  box-shadow: 0 18px 44px -12px rgba(79, 70, 229, 0.8);
 }
 
 .btn--ghost {
@@ -384,7 +476,7 @@ p {
 }
 
 .header--scrolled {
-  background: rgba(7, 8, 15, 0.72);
+  background: var(--header-bg);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   border-bottom-color: var(--stroke);
@@ -500,7 +592,7 @@ p {
   position: fixed;
   inset: 0;
   z-index: 55;
-  background: rgba(7, 8, 15, 0.88);
+  background: var(--drawer-bg);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   display: flex;
@@ -563,7 +655,7 @@ p {
 /* ---------- Hero ---------- */
 
 .hero {
-  padding-top: calc(var(--header-h) + clamp(3rem, 2rem + 5vw, 6.5rem));
+  padding-top: calc(var(--header-h) + var(--topbar-h) + clamp(2rem, 1.5rem + 4vw, 5rem));
   padding-bottom: clamp(3.5rem, 3rem + 3vw, 6rem);
 }
 
@@ -848,7 +940,7 @@ p {
 .footer {
   border-top: 1px solid var(--stroke);
   padding: 3.5rem 0 2.5rem;
-  background: rgba(5, 6, 11, 0.6);
+  background: var(--footer-bg);
   backdrop-filter: blur(12px);
 }
 
@@ -901,7 +993,7 @@ p {
 /* ---------- Страничный hero ---------- */
 
 .page-hero {
-  padding-top: calc(var(--header-h) + clamp(3rem, 2rem + 4vw, 5.5rem));
+  padding-top: calc(var(--header-h) + var(--topbar-h) + clamp(2rem, 1.5rem + 3vw, 4.5rem));
   padding-bottom: clamp(1.5rem, 1rem + 2vw, 3rem);
 }
 
@@ -1182,9 +1274,9 @@ p {
   max-height: calc(100dvh - 130px);
   display: flex;
   flex-direction: column;
-  border-radius: 22px;
+  border-radius: 24px;
   overflow: hidden;
-  background: rgba(11, 13, 23, 0.85);
+  background: var(--chat-bg);
   border: 1px solid var(--stroke-bright);
   backdrop-filter: blur(26px);
   -webkit-backdrop-filter: blur(26px);
@@ -1532,8 +1624,18 @@ p {
 }
 
 @media (max-width: 768px) {
+  :root,
+  :root[data-theme='dark'],
+  :root[data-theme='light'] {
+    --topbar-h: 0px;
+  }
+
+  .topbar {
+    display: none;
+  }
+
   .nav,
-  .header__cta {
+  .header__actions {
     display: none;
   }
 
@@ -1593,5 +1695,244 @@ p {
 
   html {
     scroll-behavior: auto;
+  }
+}
+
+/* ============================================================
+   Компоненты редизайна «Индиго Лайв»
+   ============================================================ */
+
+/* ---------- Топбар с оффером ---------- */
+.topbar {
+  height: var(--topbar-h);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--glass);
+  border-bottom: 1px solid var(--stroke);
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  padding: 0 1rem;
+}
+
+.topbar b {
+  color: var(--emerald);
+  font-weight: 700;
+}
+
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.drawer__foot {
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* ---------- Переключатель темы ---------- */
+.theme-toggle {
+  width: 54px;
+  height: 30px;
+  flex: none;
+  border-radius: 999px;
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  position: relative;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.theme-toggle:hover {
+  border-color: var(--stroke-bright);
+}
+
+.theme-toggle__thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--grad-btn);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  transition: transform 0.35s var(--ease-out);
+}
+
+:root[data-theme='light'] .theme-toggle__thumb {
+  transform: translateX(24px);
+}
+
+.theme-toggle__thumb svg {
+  width: 13px;
+  height: 13px;
+}
+
+/* ---------- Дашборд-панель героя ---------- */
+.hero-panel {
+  padding: 1.4rem;
+  border-radius: var(--radius-lg);
+}
+
+.hero-panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.1rem;
+}
+
+.hero-panel__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.hero-panel__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--emerald);
+  background: rgba(16, 185, 129, 0.14);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 0.28rem 0.7rem;
+  border-radius: 999px;
+}
+
+.hero-panel__tag i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--emerald);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.hero-panel__metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+  margin-bottom: 0.8rem;
+}
+
+.hero-panel__metric {
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius-sm);
+  padding: 0.9rem 1rem;
+}
+
+.hero-panel__metric .v {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 700;
+  background: var(--grad-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-panel__metric .l {
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+  margin-top: 0.2rem;
+}
+
+.hero-panel__chart {
+  height: 120px;
+  padding: 0.9rem;
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius-sm);
+}
+
+.hero-panel__chart svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.hero-panel__spark {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: draw 2.4s var(--ease-out) forwards;
+}
+
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ---------- Маркеры доверия ---------- */
+.trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.4rem;
+  margin-top: 1.6rem;
+}
+
+.trust span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+}
+
+.trust span::before {
+  content: '';
+  width: 18px;
+  height: 18px;
+  flex: none;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.16);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4 4 10-10'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 11px;
+}
+
+/* ---------- Правки чата под светлую тему ---------- */
+:root[data-theme='light'] .msg--bot {
+  background: rgba(23, 26, 58, 0.05);
+  border-color: rgba(23, 26, 58, 0.1);
+}
+
+:root[data-theme='light'] .msg--typing i {
+  background: var(--ink-faint);
+}
+
+:root[data-theme='light'] .chat__quick button {
+  border-color: rgba(79, 70, 229, 0.35);
+  color: var(--cobalt);
+}
+
+:root[data-theme='light'] .chat__quick button:hover {
+  background: rgba(79, 70, 229, 0.08);
+}
+
+/* Иконки-карточки в светлой теме */
+:root[data-theme='light'] .card__icon {
+  background: linear-gradient(140deg, rgba(56, 189, 248, 0.12), rgba(99, 102, 241, 0.14));
+  color: var(--cobalt);
+}
+
+/* Чипы в светлой теме читабельнее */
+:root[data-theme='light'] .chip {
+  background: rgba(79, 70, 229, 0.06);
+}
+
+@media (max-width: 768px) {
+  /* Идёт последним в источнике — перекрывает базовый .header__actions{flex} */
+  .header__actions {
+    display: none;
+  }
+  .topbar {
+    display: none;
   }
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { NavLink, Link, useLocation } from 'react-router-dom'
 import Logo from './Logo'
+import ThemeToggle from './ThemeToggle'
 
 const links = [
   { to: '/services', label: 'Услуги' },
@@ -36,6 +37,9 @@ export default function Header() {
   return (
     <>
       <header className={`header ${scrolled ? 'header--scrolled' : ''}`}>
+        <div className="topbar">
+          Первый аудит — <b>бесплатно</b>: находим 2–3 точки, где ИИ окупится в первый месяц
+        </div>
         <div className="container header__inner">
           <Logo />
           <nav className="nav" aria-label="Основная навигация">
@@ -49,9 +53,12 @@ export default function Header() {
               </NavLink>
             ))}
           </nav>
-          <Link to="/contact" className="btn btn--primary header__cta">
-            Обсудить проект
-          </Link>
+          <div className="header__actions">
+            <ThemeToggle />
+            <Link to="/contact" className="btn btn--primary header__cta">
+              Обсудить проект
+            </Link>
+          </div>
           <button
             className={`burger ${open ? 'is-open' : ''}`}
             onClick={() => setOpen(!open)}
@@ -79,9 +86,12 @@ export default function Header() {
               {l.label}
             </NavLink>
           ))}
-          <Link to="/contact" className="btn btn--primary" tabIndex={open ? 0 : -1}>
-            Обсудить проект
-          </Link>
+          <div className="drawer__foot">
+            <ThemeToggle />
+            <Link to="/contact" className="btn btn--primary" tabIndex={open ? 0 : -1}>
+              Обсудить проект
+            </Link>
+          </div>
         </nav>
       </div>
     </>
