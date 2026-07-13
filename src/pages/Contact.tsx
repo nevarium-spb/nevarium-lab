@@ -53,10 +53,10 @@ export default function Contact() {
                   <IconSend />
                 </div>
                 <div>
-                  <div className="contact-info__label">Telegram</div>
+                  <div className="contact-info__label">Max</div>
                   <a
                     className="contact-info__value"
-                    href="https://t.me/nevarium"
+                    href="https://max.ru/@nevarium"
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -112,7 +112,7 @@ export default function Contact() {
                         id="cf-contact"
                         name="contact"
                         required
-                        placeholder="+7 900 000-00-00 или @nick"
+                        placeholder="+7 900 000-00-00 или @nick (Max/Telegram)"
                         autoComplete="tel"
                       />
                     </div>

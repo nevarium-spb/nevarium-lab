@@ -128,6 +128,37 @@ export default function Chatbot() {
                   {q.label}
                 </button>
               ))}
+              {nodeId === 'lead_done' && (
+                <a
+                  href="https://max.ru/@nevarium"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="chat__quick-link"
+                  style={{
+                    display: 'block',
+                    padding: '0.5rem 1rem',
+                    borderRadius: '999px',
+                    background: 'linear-gradient(100deg, #4f46e5, #4338ca)',
+                    color: '#fff',
+                    fontWeight: 700,
+                    fontSize: '0.9rem',
+                    textAlign: 'center',
+                    textDecoration: 'none',
+                    marginTop: '0.5rem',
+                    transition: 'transform 0.2s, box-shadow 0.2s',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-2px)'
+                    e.currentTarget.style.boxShadow = '0 8px 20px rgba(79, 70, 229, 0.4)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'none'
+                    e.currentTarget.style.boxShadow = 'none'
+                  }}
+                >
+                  Продолжить в Max →
+                </a>
+              )}
             </div>
           )}
 
