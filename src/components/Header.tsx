@@ -37,9 +37,6 @@ export default function Header() {
   return (
     <>
       <header className={`header ${scrolled ? 'header--scrolled' : ''}`}>
-        <div className="topbar">
-          Первый аудит — <b>бесплатно</b>: находим 2–3 точки, где ИИ окупится в первый месяц
-        </div>
         <div className="container header__inner">
           <Logo />
           <nav className="nav" aria-label="Основная навигация">

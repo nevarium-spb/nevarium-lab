@@ -6,7 +6,7 @@ import { IconMail, IconMax, IconClock, IconCheck } from '../data/icons'
 export default function Contact() {
   usePageMeta(
     'Контакты — Невариум ЛАБ ИИ',
-    'Оставьте заявку на бесплатный аудит: найдём 2–3 точки, где ИИ окупится в вашем бизнесе уже в первый месяц.',
+    'Оставьте заявку и обсудите вашу задачу с нашей командой.',
   )
   const [sent, setSent] = useState(false)
 

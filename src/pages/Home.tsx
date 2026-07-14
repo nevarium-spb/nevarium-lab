@@ -4,7 +4,6 @@ import Reveal from '../components/Reveal'
 import SectionHead from '../components/SectionHead'
 import HeroPanel from '../components/HeroPanel'
 import Stat from '../components/Stat'
-import CTABand from '../components/CTABand'
 import { services, processSteps } from '../data/content'
 
 const marqueeItems = [
@@ -42,7 +41,7 @@ const quotes = [
 export default function Home() {
   usePageMeta(
     'Невариум ЛАБ ИИ — внедряем ИИ в бизнес. Измеримо.',
-    'GPT-ассистенты под ключ, чат-боты для продаж, ИИ-контент и автоматизация в таблицах. Первый аудит — бесплатно.',
+    'GPT-ассистенты под ключ, чат-боты для продаж, ИИ-контент и автоматизация в таблицах.',
   )
 
   return (
@@ -197,8 +196,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <CTABand />
     </>
   )
 }

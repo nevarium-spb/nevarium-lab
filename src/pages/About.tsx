@@ -1,7 +1,6 @@
 import { usePageMeta } from '../hooks/usePageMeta'
 import Reveal from '../components/Reveal'
 import SectionHead from '../components/SectionHead'
-import CTABand from '../components/CTABand'
 import { IconSearch, IconMap, IconShield, IconChart } from '../data/icons'
 
 const values = [
@@ -131,11 +130,6 @@ export default function About() {
           </div>
         </div>
       </section>
-
-      <CTABand
-        title="Посмотрим на ваш бизнес глазами лаборатории?"
-        lead="30 минут разговора — и у вас будет карта: где ИИ сэкономит время уже в этом месяце, а куда пока не стоит вкладываться."
-      />
     </>
   )
 }

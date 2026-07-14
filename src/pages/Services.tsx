@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import { usePageMeta } from '../hooks/usePageMeta'
 import Reveal from '../components/Reveal'
-import CTABand from '../components/CTABand'
 import { services } from '../data/content'
 
 export default function Services() {
@@ -17,7 +16,7 @@ export default function Services() {
           <Reveal>
             <span className="eyebrow">Услуги</span>
             <h1 className="h1">
-              Шесть способов внедрить ИИ <span className="text-grad">уже в этом месяце</span>
+              Семь способов внедрить ИИ <span className="text-grad">уже в этом месяце</span>
             </h1>
             <p className="lead">
               Каждая услуга — законченное решение: с настройкой, тестированием на ваших данных
@@ -77,10 +76,6 @@ export default function Services() {
         </div>
       </section>
 
-      <CTABand
-        title="Не знаете, с какой услуги начать?"
-        lead="Это нормально. На бесплатном аудите разберём процессы и подскажем, где ИИ окупится быстрее — без обязательств."
-      />
     </>
   )
 }

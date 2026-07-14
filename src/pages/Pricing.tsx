@@ -53,11 +53,6 @@ export default function Pricing() {
               </Reveal>
             ))}
           </div>
-          <Reveal delay={0.2}>
-            <p style={{ textAlign: 'center', marginTop: '1.8rem', color: 'var(--ink-faint)', fontSize: '0.9rem' }}>
-              Не уверены в выборе? Начните с бесплатного аудита — подскажем честно, включая вариант «вам это пока не нужно».
-            </p>
-          </Reveal>
         </div>
       </section>
 

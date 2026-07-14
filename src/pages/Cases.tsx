@@ -1,6 +1,5 @@
 import { usePageMeta } from '../hooks/usePageMeta'
 import Reveal from '../components/Reveal'
-import CTABand from '../components/CTABand'
 import { cases } from '../data/content'
 
 export default function Cases() {
@@ -59,11 +58,6 @@ export default function Cases() {
           </div>
         </div>
       </section>
-
-      <CTABand
-        title="Хотите такой же результат в своей нише?"
-        lead="Расскажите о задаче — на бесплатном аудите покажем, какой из сценариев подойдёт вам и что он даст в цифрах."
-      />
     </>
   )
 }
