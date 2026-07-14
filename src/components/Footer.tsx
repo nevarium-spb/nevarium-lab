@@ -37,8 +37,9 @@ export default function Footer() {
           </div>
         </div>
         <div className="footer__bottom">
-          <span>© {new Date().getFullYear()} Невариум ЛАБ ИИ. Все права защищены.</span>
-          <span>Сделано с ИИ — как и всё, что мы делаем.</span>
+          <span>ИП Макеева Марина Александровна</span>
+          <span style={{ textAlign: 'center', flex: 1 }}>© {new Date().getFullYear()} Nevarium AI LAB. All rights reserved.</span>
+          <span></span>
         </div>
       </div>
     </footer>

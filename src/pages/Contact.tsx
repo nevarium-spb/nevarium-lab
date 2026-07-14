@@ -56,11 +56,11 @@ export default function Contact() {
                   <div className="contact-info__label">Max</div>
                   <a
                     className="contact-info__value"
-                    href="https://max.ru/@nevarium"
+                    href="https://max.ru/join/4u3kB47o-53REUPLuMBIl2uHDiMAmAFto24mxJ1wgnk"
                     target="_blank"
                     rel="noreferrer"
                   >
-                    @nevarium
+                    Мы в MAX
                   </a>
                 </div>
               </div>
@@ -73,12 +73,32 @@ export default function Contact() {
                   <div className="contact-info__value">Пн–Пт, 10:00–19:00 МСК</div>
                 </div>
               </div>
+              <div className="contact-info__row">
+                <div className="card__icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                  </svg>
+                </div>
+                <div>
+                  <div className="contact-info__label">Телефон</div>
+                  <svg width="140" height="28" viewBox="0 0 140 28" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
+                    <text x="0" y="20" fontFamily="system-ui, -apple-system, sans-serif" fontSize="14" fill="currentColor" letterSpacing="0.5">
+                      +7 921 008-16-06
+                    </text>
+                  </svg>
+                </div>
+              </div>
               <div
                 className="glass"
                 style={{ padding: '1.1rem 1.3rem', borderRadius: 14, fontSize: '0.92rem', color: 'var(--ink-soft)' }}
               >
-                Первый аудит — <strong style={{ color: 'var(--ink)' }}>бесплатно</strong>. 30 минут,
-                онлайн, без обязательств. Уйдёте минимум со списком из 2–3 идей для своего бизнеса.
+                <strong style={{ color: 'var(--ink)' }}>ИП Макеева Марина Александровна</strong>
+                <br />
+                ИНН 770878422219
+                <br />
+                ОГРНИП 326784700057660
+                <br />
+                Санкт-Петербург, Витебский проспект д. 41К3 -131
               </div>
             </div>
           </Reveal>

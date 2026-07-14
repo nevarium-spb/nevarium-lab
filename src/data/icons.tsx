@@ -44,15 +44,22 @@ export const IconChat = ({ size = 24 }: IconProps) => (
 )
 
 export const IconMax = ({ size = 24 }: IconProps) => (
-  <svg {...base(size)} fill="currentColor" stroke="none">
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <defs>
-      <linearGradient id="max-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="currentColor" />
-        <stop offset="100%" stopColor="currentColor" stopOpacity="0.6" />
+      <linearGradient id="max-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#3b82f6" />
+        <stop offset="100%" stopColor="#a855f7" />
       </linearGradient>
     </defs>
-    <circle cx="12" cy="12" r="10" fill="url(#max-grad)" opacity="0.8" />
-    <circle cx="12" cy="11" r="5.5" fill="white" />
+    {/* Outer circle with gradient */}
+    <circle cx="12" cy="12" r="11" fill="url(#max-gradient)" />
+    {/* White speech bubble */}
+    <path
+      d="M 12 4 C 7.58 4 4 7.58 4 12 C 4 13.5 4.4 14.9 5.1 16.1 L 4 20 L 8.2 18.8 C 9.4 19.6 10.7 20 12 20 C 16.42 20 20 16.42 20 12 C 20 7.58 16.42 4 12 4 Z"
+      fill="white"
+    />
+    {/* Inner blue dot */}
+    <circle cx="12" cy="12" r="3" fill="#4f46e5" />
   </svg>
 )
 
