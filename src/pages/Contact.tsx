@@ -43,8 +43,12 @@ export default function Contact() {
                 </div>
                 <div>
                   <div className="contact-info__label">Почта</div>
-                  <a className="contact-info__value" href="mailto:hello@nevarium.ai">
-                    hello@nevarium.ai
+                  <a className="contact-info__value" href="mailto:nevarium-lab@yandex.com">
+                    <svg width="200" height="28" viewBox="0 0 200 28" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
+                      <text x="0" y="20" fontFamily="system-ui, -apple-system, sans-serif" fontSize="14" fill="currentColor" letterSpacing="0.5">
+                        nevarium-lab@yandex.com
+                      </text>
+                    </svg>
                   </a>
                 </div>
               </div>
