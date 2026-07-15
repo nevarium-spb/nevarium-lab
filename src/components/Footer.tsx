@@ -39,7 +39,7 @@ export default function Footer() {
         <div className="footer__bottom">
           <span>ИП Макеева Марина Александровна</span>
           <span style={{ textAlign: 'center', flex: 1 }}>© {new Date().getFullYear()} Nevarium AI LAB. All rights reserved.</span>
-          <span></span>
+          <span>Сделано с ИИ — как и всё, что мы делаем.</span>
         </div>
       </div>
     </footer>
