@@ -65,7 +65,7 @@ export default function Home() {
               </p>
               <div className="hero__actions">
                 <Link to="/contact" className="btn btn--primary btn--lg">
-                  Бесплатный аудит
+                  Обсудить проект
                 </Link>
                 <Link to="/cases" className="btn btn--ghost btn--lg">
                   Смотреть кейсы
