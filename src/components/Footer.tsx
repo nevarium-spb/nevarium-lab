@@ -10,7 +10,8 @@ export default function Footer() {
             <Logo />
             <p className="footer__about">
               Лаборатория внедрения искусственного интеллекта в малый и средний бизнес.
-              Ассистенты, автоматизация, контент — с измеримым результатом.
+              Ассистенты, боты, автоматизация и обучение команд — с метрикой, зафиксированной
+              до старта, и работой по NDA.
             </p>
           </div>
           <div className="footer__col">
@@ -29,11 +30,15 @@ export default function Footer() {
           </div>
           <div className="footer__col">
             <div className="footer__title">Связь</div>
-            <a href="mailto:hello@nevarium.ai">hello@nevarium.ai</a>
-            <a href="https://t.me/nevarium" target="_blank" rel="noreferrer">
-              Telegram
+            <Link to="/contact">Почта и телефон</Link>
+            <a
+              href="https://max.ru/join/4u3kB47o-53REUPLuMBIl2uHDiMAmAFto24mxJ1wgnk"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Мы в MAX
             </a>
-            <Link to="/contact">Оставить заявку</Link>
+            <Link to="/contact">Обсудить задачу</Link>
           </div>
         </div>
         <div className="footer__bottom">

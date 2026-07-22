@@ -5,7 +5,7 @@ import { cases } from '../data/content'
 export default function Cases() {
   usePageMeta(
     'Кейсы — Невариум ЛАБ ИИ',
-    'Сценарии внедрения ИИ по нишам: e-commerce, онлайн-школы, B2B, HR, розница — с измеримыми результатами.',
+    'Типовые сценарии внедрения ИИ по нишам: e-commerce, онлайн-школы, B2B, HR, розница, личный бренд.',
   )
 
   return (
@@ -13,13 +13,14 @@ export default function Cases() {
       <section className="page-hero">
         <div className="container">
           <Reveal>
-            <span className="eyebrow">Кейсы</span>
+            <span className="eyebrow">Сценарии</span>
             <h1 className="h1">
-              Что ИИ уже делает <span className="text-grad">в реальном бизнесе</span>
+              Типовые сценарии <span className="text-grad">внедрения по нишам</span>
             </h1>
             <p className="lead">
-              Типовые сценарии внедрения по нишам. Узнаёте свою ситуацию — значит, решение
-              для неё уже отработано.
+              Ниже — модельные сценарии: ситуация, решение и ориентир по эффекту. Это не отчёты
+              клиентов, а отработанные методологии. Узнаёте свою ситуацию — значит, под неё
+              уже есть готовый план.
             </p>
           </Reveal>
         </div>
@@ -40,7 +41,7 @@ export default function Cases() {
                   </div>
                   <h2 className="h3">{c.title}</h2>
                   <p>
-                    <strong style={{ color: 'var(--ink)' }}>Задача:</strong> {c.problem}
+                    <strong style={{ color: 'var(--ink)' }}>Ситуация:</strong> {c.problem}
                   </p>
                   <p>
                     <strong style={{ color: 'var(--ink)' }}>Решение:</strong> {c.solution}

@@ -8,7 +8,7 @@ import { plans, faqs } from '../data/content'
 export default function Pricing() {
   usePageMeta(
     'Тарифы — Невариум ЛАБ ИИ',
-    'Три формата работы: Старт от 39 000 ₽, Система — комплексное внедрение, Партнёр — ИИ-директор на аутсорсе.',
+    'Три формата работы: Старт от 39 000 ₽, Система — комплексное внедрение, Партнёр — ИИ-директор на аутсорсе. Метрика фиксируется до старта.',
   )
   const [openFaq, setOpenFaq] = useState<number | null>(0)
 
@@ -22,8 +22,9 @@ export default function Pricing() {
               Честные цены <span className="text-grad">за измеримый результат</span>
             </h1>
             <p className="lead">
-              Платите за решение задачи, а не за часы. Перед стартом фиксируем метрику успеха —
-              если не достигаем, дорабатываем за свой счёт.
+              Платите за решённую задачу, а не за часы команды. До старта фиксируем метрику
+              успеха — чтобы вы и мы одинаково понимали, что считается результатом.
+              Работаем по NDA.
             </p>
           </Reveal>
         </div>
@@ -35,7 +36,7 @@ export default function Pricing() {
             {plans.map((p, i) => (
               <Reveal key={p.name} delay={i * 0.1}>
                 <div className={`glass plan ${p.featured ? 'plan--featured' : ''}`} style={{ height: '100%' }}>
-                  {p.featured && <span className="plan__tag">Выбирают чаще всего</span>}
+                  {p.featured && <span className="plan__tag">Оптимальный баланс</span>}
                   <h2 className="h3">{p.name}</h2>
                   <div className="plan__price">
                     {p.price} <small>{p.period}</small>
@@ -61,7 +62,7 @@ export default function Pricing() {
           <SectionHead
             eyebrow="FAQ"
             title="Частые вопросы"
-            lead="Не нашли ответ — спросите Неву в чате справа внизу, она отвечает мгновенно."
+            lead="Здесь — то, что спрашивают до старта чаще всего. Не нашли свой вопрос — спросите Неву в чате справа внизу."
           />
           <div className="faq">
             {faqs.map((f, i) => (

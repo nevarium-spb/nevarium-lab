@@ -171,7 +171,7 @@ export default function Chatbot() {
                 node.input === 'name'
                   ? 'Ваше имя…'
                   : node.input === 'phone'
-                    ? '+7 900 000-00-00 или @telegram'
+                    ? '+7 900 000-00-00 или ник в Max'
                     : 'Напишите вопрос…'
               }
               aria-label="Сообщение для ассистента"
