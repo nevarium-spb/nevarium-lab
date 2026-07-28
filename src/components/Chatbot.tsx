@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { botNodes, routeFreeText } from '../data/bot'
+import { sendLead } from '../lib/leads'
 import { IconBot, IconChat, IconClose, IconSend } from '../data/icons'
 
 type Message = { from: 'bot' | 'user'; text: string }
@@ -83,7 +84,11 @@ export default function Chatbot() {
       return
     }
     if (node.input === 'phone') {
-      speak('lead_done')
+      // Контакт получен — отправляем заявку в CRM. Если не дошла, говорим об этом
+      // прямо и даём прямой канал: иначе человек уйдёт, считая, что его записали.
+      sendLead({ name: leadName, contact: text, source: 'chat' })
+        .then(() => speak('lead_done'))
+        .catch(() => speak('lead_failed'))
       return
     }
     speak(routeFreeText(text))

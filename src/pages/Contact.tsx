@@ -1,19 +1,39 @@
 import { useState, type FormEvent } from 'react'
 import { usePageMeta } from '../hooks/usePageMeta'
 import Reveal from '../components/Reveal'
+import { sendLead } from '../lib/leads'
 import { IconMail, IconMax, IconClock, IconCheck } from '../data/icons'
+
+const MAX_LINK = 'https://max.ru/join/4u3kB47o-53REUPLuMBIl2uHDiMAmAFto24mxJ1wgnk'
 
 export default function Contact() {
   usePageMeta(
     'Контакты — Невариум ЛАБ ИИ',
     'Расскажите о задаче — вернёмся с ответом в течение рабочего дня. Работаем по NDA.',
   )
-  const [sent, setSent] = useState(false)
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+  const sent = status === 'sent'
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // Демо-режим: в бою здесь запрос к бэкенду или сервису форм
-    setSent(true)
+    if (status === 'sending') return // защита от двойного клика
+    const form = new FormData(e.currentTarget)
+    setStatus('sending')
+    try {
+      await sendLead({
+        name: String(form.get('name') || ''),
+        contact: String(form.get('contact') || ''),
+        task: String(form.get('topic') || ''),
+        note: String(form.get('message') || ''),
+        source: 'form',
+        website: String(form.get('website') || ''), // ловушка для ботов
+      })
+      setStatus('sent')
+    } catch {
+      // Экран успеха здесь был бы обманом: заявка не дошла. Показываем прямой
+      // способ связи, чтобы человек не ушёл ни с чем.
+      setStatus('error')
+    }
   }
 
   return (
@@ -168,9 +188,27 @@ export default function Contact() {
                       placeholder="Например: менеджеры отвечают на одни и те же вопросы клиентов…"
                     />
                   </div>
-                  <button type="submit" className="btn btn--primary btn--lg">
-                    Отправить заявку
+                  {/* Ловушка для ботов: человек это поле не видит, автозаполнение выключено */}
+                  <input
+                    type="text"
+                    name="website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
+                  />
+                  <button type="submit" className="btn btn--primary btn--lg" disabled={status === 'sending'}>
+                    {status === 'sending' ? 'Отправляем…' : 'Отправить заявку'}
                   </button>
+                  {status === 'error' && (
+                    <p role="alert" style={{ fontSize: '0.9rem', color: '#fca5a5' }}>
+                      Не получилось отправить — похоже, пропала связь. Напишите нам напрямую:{' '}
+                      <a href={MAX_LINK} target="_blank" rel="noreferrer" style={{ color: 'inherit', textDecoration: 'underline' }}>
+                        в MAX
+                      </a>{' '}
+                      или на почту с этой страницы. Ваше сообщение не потеряется.
+                    </p>
+                  )}
                   <p style={{ fontSize: '0.8rem', color: 'var(--ink-faint)' }}>
                     Нажимая кнопку, вы соглашаетесь на обработку персональных данных. Всё, что вы
                     расскажете о своих процессах, остаётся между нами — работаем по NDA.
