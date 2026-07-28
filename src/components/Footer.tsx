@@ -39,6 +39,7 @@ export default function Footer() {
               Мы в MAX
             </a>
             <Link to="/contact">Обсудить задачу</Link>
+            <Link to="/privacy">Обработка данных</Link>
           </div>
         </div>
         <div className="footer__bottom">

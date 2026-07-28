@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { usePageMeta } from '../hooks/usePageMeta'
 import Reveal from '../components/Reveal'
 import { sendLead } from '../lib/leads'
@@ -210,8 +211,11 @@ export default function Contact() {
                     </p>
                   )}
                   <p style={{ fontSize: '0.8rem', color: 'var(--ink-faint)' }}>
-                    Нажимая кнопку, вы соглашаетесь на обработку персональных данных. Всё, что вы
-                    расскажете о своих процессах, остаётся между нами — работаем по NDA.
+                    Нажимая кнопку, вы соглашаетесь на{' '}
+                    <Link to="/privacy" style={{ color: 'inherit', textDecoration: 'underline' }}>
+                      обработку персональных данных
+                    </Link>
+                    . Всё, что вы расскажете о своих процессах, остаётся между нами — работаем по NDA.
                   </p>
                 </form>
               )}
