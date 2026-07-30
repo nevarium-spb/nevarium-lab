@@ -41,3 +41,33 @@ export async function sendLead(lead: Lead): Promise<void> {
   })
   if (!res.ok) throw new Error(`CRM ответила ${res.status}`)
 }
+
+/** Что человек просит сделать с его данными — совпадает с п.7 политики. */
+export type PdKind = 'access' | 'correct' | 'delete' | 'stop'
+
+export type PdRequest = {
+  /** Почта или телефон, по которым человека можно найти в базе и ответить ему. */
+  contact: string
+  kind: PdKind
+  /** Пояснение в свободной форме, необязательно. */
+  note?: string
+  /** Ловушка для ботов. */
+  website?: string
+}
+
+/**
+ * Запрос по персональным данным (152-ФЗ). Политика обещает исполнить его за
+ * 10 рабочих дней, и срок идёт с момента обращения — поэтому «сделать вид,
+ * что отправилось» здесь опаснее, чем с заявкой: человек будет ждать ответа,
+ * которого никто не получил, и пойдёт с жалобой в Роскомнадзор. Если запрос
+ * не прошёл, вызывающий код обязан показать почту как запасной канал.
+ */
+export async function sendPdRequest(request: PdRequest): Promise<void> {
+  const res = await fetch(`${API}/api/pd-requests`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ ...request, project: PROJECT }),
+    signal: AbortSignal.timeout(TIMEOUT_MS),
+  })
+  if (!res.ok) throw new Error(`CRM ответила ${res.status}`)
+}

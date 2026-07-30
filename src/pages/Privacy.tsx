@@ -1,5 +1,6 @@
 import { usePageMeta } from '../hooks/usePageMeta'
 import Reveal from '../components/Reveal'
+import PdRequestForm from '../components/PdRequestForm'
 
 // Политика обработки персональных данных (152-ФЗ).
 // Текст описывает то, что сайт делает на самом деле: аналитики и отслеживающих
@@ -137,11 +138,12 @@ export default function Privacy() {
                 <li>потребовать прекратить обработку.</li>
               </ul>
               <p>
-                Достаточно написать на{' '}
+                Заполните форму ниже или напишите на{' '}
                 <a href="mailto:nevarium-lab@yandex.com">nevarium-lab@yandex.com</a> — ответим
                 и выполним в течение 10 рабочих дней. Если считаете, что мы нарушили ваши права,
                 вы вправе обратиться в Роскомнадзор.
               </p>
+              <PdRequestForm />
 
               <h2>8. Как мы защищаем данные</h2>
               <p>
