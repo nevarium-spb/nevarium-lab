@@ -151,7 +151,14 @@ export default function Contact() {
                   <div className="form__row">
                     <div>
                       <label htmlFor="cf-name">Ваше имя *</label>
-                      <input id="cf-name" name="name" required placeholder="Как к вам обращаться" autoComplete="name" />
+                      <input
+                        id="cf-name"
+                        name="name"
+                        required
+                        maxLength={100}
+                        placeholder="Как к вам обращаться"
+                        autoComplete="name"
+                      />
                     </div>
                     <div>
                       <label htmlFor="cf-contact">Телефон или Telegram *</label>
@@ -159,6 +166,7 @@ export default function Contact() {
                         id="cf-contact"
                         name="contact"
                         required
+                        maxLength={254}
                         placeholder="+7 900 000-00-00 или @nick (Max/Telegram)"
                         autoComplete="tel"
                       />
@@ -186,6 +194,7 @@ export default function Contact() {
                       id="cf-msg"
                       name="message"
                       rows={4}
+                      maxLength={2000}
                       placeholder="Например: менеджеры отвечают на одни и те же вопросы клиентов…"
                     />
                   </div>

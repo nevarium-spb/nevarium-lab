@@ -71,6 +71,7 @@ export default function PdRequestForm() {
           id="pd-contact"
           name="contact"
           required
+          maxLength={254}
           placeholder="ivan@example.ru или +7 900 000-00-00"
           autoComplete="email"
         />
@@ -81,7 +82,13 @@ export default function PdRequestForm() {
       </div>
       <div>
         <label htmlFor="pd-note">Пояснение, если нужно</label>
-        <textarea id="pd-note" name="note" rows={3} placeholder="Например: какие именно данные исправить" />
+        <textarea
+          id="pd-note"
+          name="note"
+          rows={3}
+          maxLength={2000}
+          placeholder="Например: какие именно данные исправить"
+        />
       </div>
       {/* Ловушка для ботов: человек это поле не видит, автозаполнение выключено */}
       <input

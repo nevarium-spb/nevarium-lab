@@ -30,8 +30,10 @@ export default function Chatbot() {
   const [leadName, setLeadName] = useState(saved.current?.leadName ?? '')
   const [typing, setTyping] = useState(false)
   const [input, setInput] = useState('')
+  const [sending, setSending] = useState(false)
   const bodyRef = useRef<HTMLDivElement>(null)
   const timerRef = useRef<ReturnType<typeof setTimeout>>()
+  const sendingRef = useRef(false) // синхронный флаг: state обновится только на следующий рендер
 
   const node = botNodes[nodeId] ?? botNodes.start
 
@@ -74,7 +76,7 @@ export default function Chatbot() {
 
   const send = () => {
     const text = input.trim()
-    if (!text || typing) return
+    if (!text || typing || sendingRef.current) return
     setInput('')
     setMessages((m) => [...m, { from: 'user', text }])
 
@@ -86,9 +88,17 @@ export default function Chatbot() {
     if (node.input === 'phone') {
       // Контакт получен — отправляем заявку в CRM. Если не дошла, говорим об этом
       // прямо и даём прямой канал: иначе человек уйдёт, считая, что его записали.
+      // sendingRef блокирует повторный Enter, пока fetch не завершится: без него
+      // typing (только для анимации "печатает") не защищает от дублей заявки.
+      sendingRef.current = true
+      setSending(true)
       sendLead({ name: leadName, contact: text, source: 'chat' })
         .then(() => speak('lead_done'))
         .catch(() => speak('lead_failed'))
+        .finally(() => {
+          sendingRef.current = false
+          setSending(false)
+        })
       return
     }
     speak(routeFreeText(text))
@@ -172,19 +182,22 @@ export default function Chatbot() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && send()}
+              disabled={sending}
               placeholder={
-                node.input === 'name'
-                  ? 'Ваше имя…'
-                  : node.input === 'phone'
-                    ? '+7 900 000-00-00 или ник в Max'
-                    : 'Напишите вопрос…'
+                sending
+                  ? 'Отправляем…'
+                  : node.input === 'name'
+                    ? 'Ваше имя…'
+                    : node.input === 'phone'
+                      ? '+7 900 000-00-00 или ник в Max'
+                      : 'Напишите вопрос…'
               }
               aria-label="Сообщение для ассистента"
             />
             <button
               className="chat__send"
               onClick={send}
-              disabled={!input.trim() || typing}
+              disabled={!input.trim() || typing || sending}
               aria-label="Отправить сообщение"
             >
               <IconSend size={18} />
