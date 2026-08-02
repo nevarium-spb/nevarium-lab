@@ -1,0 +1,81 @@
+---
+// Базовый макет страницы. В Фазе 1 — только оболочка документа (head + слот).
+// Шапка, подвал, живой фон и чат добавляются в Фазе 2.
+import '../styles/global.css'
+
+type Props = {
+  title: string
+  description: string
+}
+
+const { title, description } = Astro.props
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0d1030" />
+    {/*
+      Тема до первой отрисовки — без мигания.
+      is:inline обязателен: без него Astro превратит скрипт в отложенный модуль,
+      и при загрузке в тёмной теме экран мигнёт белым. Скрипт перенесён дословно
+      из старого index.html.
+    */}
+    <script is:inline>
+      ;(function () {
+        try {
+          var t = localStorage.getItem('nevarium-theme')
+          document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark')
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'dark')
+        }
+      })()
+    </script>
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <!-- Шрифты — self-hosted, см. src/styles/global.css -->
+    {/*
+      Без JS блоки .reveal остались бы с opacity: 0, то есть страница была бы
+      пустой. Раньше это было неважно (весь сайт рисовался джаваскриптом), но
+      теперь HTML самодостаточен — и терять его из-за анимации появления глупо.
+    */}
+    <noscript>
+      <style>
+        .reveal {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+      </style>
+    </noscript>
+  </head>
+  <body>
+    <slot />
+
+    {/*
+      Замена React-компонента Reveal (он оборачивал контент ~54 раза и тянул
+      React на каждую статичную страницу). Пороги те же, что были в компоненте.
+    */}
+    <script>
+      const revealables = document.querySelectorAll('.reveal')
+
+      if (!('IntersectionObserver' in window)) {
+        revealables.forEach((el) => el.classList.add('is-visible'))
+      } else {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return
+              entry.target.classList.add('is-visible')
+              io.unobserve(entry.target)
+            })
+          },
+          { threshold: 0.12, rootMargin: '0px 0px -40px 0px' },
+        )
+        revealables.forEach((el) => io.observe(el))
+      }
+    </script>
+  </body>
+</html>
