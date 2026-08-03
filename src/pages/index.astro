@@ -1,0 +1,203 @@
+---
+// Главная. Перенесено из src/legacy/pages/Home.tsx дословно.
+// <Reveal> → class="reveal", <Link> → обычные ссылки, <Stat> → Stat.astro.
+//
+// Блок «Ситуации» намеренно обезличен: это НЕ отзывы реальных клиентов, а
+// типовые ситуации по сегментам. Имена, звёзды и цифры без «до» возвращать
+// только когда появятся настоящие кейсы с согласием (см. HANDOFF.md).
+import Base from '../layouts/Base.astro'
+import SectionHead from '../components/SectionHead.astro'
+import Stat from '../components/Stat.astro'
+import HeroPanel from '../components/HeroPanel'
+import { services, processSteps } from '../data/content'
+
+const marqueeItems = [
+  'GPT-ассистенты',
+  'Чат-боты 24/7',
+  'ИИ-контент',
+  'Каскадные промпты',
+  'GPT Sheets',
+  'Midjourney',
+  'Автоматизация продаж',
+  'Обучение команд',
+]
+
+const quotes = [
+  {
+    text: 'Менеджеры по восемь часов в день отвечают на одни и те же вопросы. На то, чтобы дожимать заявки, времени уже не остаётся.',
+    name: 'Онлайн-школы',
+    role: 'Продажи и приёмная комиссия',
+    initials: 'ОШ',
+    tag: 'Ситуация',
+  },
+  {
+    text: 'Контент-менеджер тратит рабочий день на то, что должно занимать полчаса. Ассортимент растёт быстрее, чем команда успевает его описывать.',
+    name: 'E-commerce',
+    role: 'Карточки товаров и контент',
+    initials: 'EC',
+    tag: 'Ситуация',
+  },
+  {
+    text: 'Мы понимаем, что ИИ уже пора внедрять. Не понимаем другого: с чего начать и где он реально окупится, а где это дорогая игрушка.',
+    name: 'B2B и услуги',
+    role: 'Собственники и руководители',
+    initials: 'B2B',
+    tag: 'Ситуация',
+  },
+]
+---
+
+<Base
+  title="Невариум ЛАБ ИИ — внедряем ИИ в бизнес. Измеримо."
+  description="GPT-ассистенты, чат-боты, автоматизация в таблицах и обучение команд. Метрику фиксируем до старта, работаем по NDA."
+>
+  {/* HERO */}
+  <section class="hero">
+    <div class="container hero__grid">
+      <div class="reveal">
+        <div>
+          <span class="hero__badge">
+            <i aria-hidden="true"></i>
+            Лаборатория внедрения ИИ для бизнеса
+          </span>
+          <h1 class="h1">
+            Внедрять ИИ — уже не&nbsp;выбор.{' '}
+            <span class="text-grad">Вопрос — как.</span>
+          </h1>
+          <p class="lead">
+            Он уже пришёл в вашу отрасль. Вопрос в том, спроектируете вы его под свои
+            процессы — или будете догонять тех, кто это сделал. Мы проектируем: ассистенты,
+            боты и автоматизация, эффект которых считается в часах и деньгах.
+          </p>
+          <div class="hero__actions">
+            <a href="/contact" class="btn btn--primary btn--lg">Обсудить проект</a>
+            <a href="/cases" class="btn btn--ghost btn--lg">Смотреть кейсы</a>
+          </div>
+          <div class="trust">
+            <span>Метрика — до старта</span>
+            <span>Обучение команды</span>
+            <span>Работаем по NDA</span>
+          </div>
+        </div>
+      </div>
+      <div class="reveal hero__visual" style="--reveal-delay: 0.15s">
+        <HeroPanel />
+      </div>
+    </div>
+  </section>
+
+  {/* MARQUEE */}
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      {
+        [0, 1].map(() => (
+          <div class="marquee__item">
+            {marqueeItems.map((item) => (
+              <span class="marquee__item">{item}</span>
+            ))}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  {/* СТАТИСТИКА */}
+  <section class="section" aria-label="Результаты в цифрах">
+    <div class="container">
+      <div class="reveal">
+        <div class="stats">
+          <Stat value={70} prefix="до " suffix="%" label="рутины процесса закрывает ассистент" />
+          <Stat value={38} prefix="до +" suffix="%" label="к конверсии в заявку с чат-ботом" />
+          <Stat value={15} suffix="+" label="ниш с готовыми методологиями" />
+          <Stat value={5} prefix="до " suffix=" ч" label="в неделю возвращает обученный сотрудник" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* УСЛУГИ */}
+  <section class="section" aria-label="Услуги">
+    <div class="container">
+      <SectionHead eyebrow="Что мы делаем">
+        ИИ-решения под задачи <span class="text-grad">вашего бизнеса</span>
+        <Fragment slot="lead">
+          Не технологии ради технологий. Сначала считаем, где процесс теряет часы и деньги,
+          — и только потом решаем, нужен ли там ИИ.
+        </Fragment>
+      </SectionHead>
+      <div class="grid-3">
+        {
+          services.map((s, i) => {
+            const Icon = s.icon
+            return (
+              <div class="reveal" style={`--reveal-delay: ${(i % 3) * 0.1}s`}>
+                <article class="glass glass--hover card" style="height: 100%">
+                  <div class="card__icon">
+                    <Icon />
+                  </div>
+                  <h3 class="h3">{s.title}</h3>
+                  <p>{s.short}</p>
+                  <a href="/services" class="card__link">
+                    Подробнее <span aria-hidden="true">→</span>
+                  </a>
+                </article>
+              </div>
+            )
+          })
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* ПРОЦЕСС */}
+  <section class="section" aria-label="Как мы работаем">
+    <div class="container">
+      <SectionHead eyebrow="Как мы работаем">
+        От аудита до работающего решения — 4 шага
+        <Fragment slot="lead">
+          Прозрачный процесс: вы всегда знаете, что происходит, что получите и когда.
+          Все данные и материалы — под NDA.
+        </Fragment>
+      </SectionHead>
+      <div class="steps">
+        {
+          processSteps.map((s, i) => (
+            <div class="reveal" style={`--reveal-delay: ${i * 0.1}s`}>
+              <div class="glass step" style="height: 100%">
+                <div class="step__num">0{i + 1}</div>
+                <h3 class="h3" style="margin-bottom: 0.6rem">{s.title}</h3>
+                <p>{s.text}</p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* СИТУАЦИИ */}
+  <section class="section" aria-label="Ситуации клиентов">
+    <div class="container">
+      <SectionHead eyebrow="Ситуации">С чем к нам приходят чаще всего</SectionHead>
+      <div class="grid-3">
+        {
+          quotes.map((q, i) => (
+            <div class="reveal" style={`--reveal-delay: ${i * 0.1}s`}>
+              <figure class="glass quote" style="height: 100%; margin: 0">
+                <div class="quote__stars">{q.tag}</div>
+                <blockquote class="quote__text" style="margin: 0">«{q.text}»</blockquote>
+                <figcaption class="quote__author">
+                  <div class="quote__avatar" aria-hidden="true">{q.initials}</div>
+                  <div>
+                    <div class="quote__name">{q.name}</div>
+                    <div class="quote__role">{q.role}</div>
+                  </div>
+                </figcaption>
+              </figure>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Base>

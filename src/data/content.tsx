@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { ComponentType } from 'react'
 import {
   IconBot,
   IconChat,
@@ -11,7 +11,11 @@ import {
 
 export type Service = {
   id: string
-  icon: ReactNode
+  /**
+   * Сам компонент иконки, а не готовый элемент (IconBot, не <IconBot />):
+   * Astro умеет отрисовать компонент, а элемент выводит как «[object Object]».
+   */
+  icon: ComponentType<{ size?: number }>
   title: string
   short: string
   full: string
@@ -22,7 +26,7 @@ export type Service = {
 export const services: Service[] = [
   {
     id: 'assistants',
-    icon: <IconBot />,
+    icon: IconBot,
     title: 'GPT-ассистенты под ключ',
     short:
       'ИИ-сотрудник под конкретный процесс: продажи, поддержка, HR, аналитика. Знает ваш продукт, говорит вашим голосом, не уходит в отпуск.',
@@ -38,7 +42,7 @@ export const services: Service[] = [
   },
   {
     id: 'chatbots',
-    icon: <IconChat />,
+    icon: IconChat,
     title: 'Чат-боты для продаж и поддержки',
     short:
       'Отвечает клиенту за секунды в любое время суток, снимает типовые вопросы и передаёт менеджеру только тёплые заявки.',
@@ -54,7 +58,7 @@ export const services: Service[] = [
   },
   {
     id: 'content',
-    icon: <IconPen />,
+    icon: IconPen,
     title: 'ИИ-контент и маркетинг',
     short:
       'Контент перестаёт зависеть от вдохновения: посты, статьи, сценарии Reels и рассылки выходят по плану, а не когда дошли руки.',
@@ -70,7 +74,7 @@ export const services: Service[] = [
   },
   {
     id: 'sheets',
-    icon: <IconTable />,
+    icon: IconTable,
     title: 'ИИ-автоматизация в таблицах',
     short:
       'Таблица, которая думает: вносите исходные данные — получаете готовый результат. Анализ ЦА, лиды, HR-скрининг, карточки товаров.',
@@ -86,7 +90,7 @@ export const services: Service[] = [
   },
   {
     id: 'visual',
-    icon: <IconImage />,
+    icon: IconImage,
     title: 'Генерация визуала и видео',
     short:
       'Баннеры, иллюстрации, логотипы и ролики без дизайнера и продакшена — в Midjourney, Flux, Kandinsky и Kling.',
@@ -102,7 +106,7 @@ export const services: Service[] = [
   },
   {
     id: 'training',
-    icon: <IconAcademy />,
+    icon: IconAcademy,
     title: 'Обучение команды ИИ',
     short:
       'Команда учится работать с ИИ системно: 16 техник промптинга, собственные ассистенты, библиотека под каждый отдел.',
@@ -118,7 +122,7 @@ export const services: Service[] = [
   },
   {
     id: 'web-development',
-    icon: <IconRocket />,
+    icon: IconRocket,
     title: 'Разработка веб-сайтов',
     short:
       'Сайты от лендинга до сложного проекта: быстрые, адаптивные, с интеграциями и ИИ-механиками внутри.',

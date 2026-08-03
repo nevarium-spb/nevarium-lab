@@ -1,0 +1,66 @@
+---
+// Кейсы — модельные сценарии по нишам.
+// Перенесено из src/legacy/pages/Cases.tsx дословно. <Reveal> заменён на
+// class="reveal", задержка появления — через --reveal-delay, как было.
+//
+// Важно про честность: это НЕ отчёты реальных клиентов, и лид прямо об этом
+// говорит. Пока не появятся настоящие кейсы с согласием на публикацию,
+// формулировки не усиливать (см. HANDOFF.md).
+import Base from '../layouts/Base.astro'
+import { cases } from '../data/content'
+---
+
+<Base
+  title="Кейсы — Невариум ЛАБ ИИ"
+  description="Типовые сценарии внедрения ИИ по нишам: e-commerce, онлайн-школы, B2B, HR, розница, личный бренд."
+>
+  <section class="page-hero">
+    <div class="container">
+      <div class="reveal">
+        <span class="eyebrow">Сценарии</span>
+        <h1 class="h1">
+          Типовые сценарии <span class="text-grad">внедрения по нишам</span>
+        </h1>
+        <p class="lead">
+          Ниже — модельные сценарии: ситуация, решение и ориентир по эффекту. Это не отчёты
+          клиентов, а отработанные методологии. Узнаёте свою ситуацию — значит, под неё
+          уже есть готовый план.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 1rem">
+    <div class="container">
+      <div class="grid-2">
+        {
+          cases.map((c, i) => (
+            <div class="reveal" style={`--reveal-delay: ${(i % 2) * 0.1}s`}>
+              <article class="glass glass--hover card" style="height: 100%">
+                <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 1rem">
+                  <span class="case-card__niche">{c.niche}</span>
+                  <div style="text-align: right">
+                    <div class="case-card__metric">{c.metric}</div>
+                    <div style="font-size: 0.78rem; color: var(--ink-faint)">{c.metricLabel}</div>
+                  </div>
+                </div>
+                <h2 class="h3">{c.title}</h2>
+                <p>
+                  <strong style="color: var(--ink)">Ситуация:</strong> {c.problem}
+                </p>
+                <p>
+                  <strong style="color: var(--ink)">Решение:</strong> {c.solution}
+                </p>
+                <div class="chips" style="margin-top: auto">
+                  {c.tags.map((t) => (
+                    <span class="chip">{t}</span>
+                  ))}
+                </div>
+              </article>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Base>

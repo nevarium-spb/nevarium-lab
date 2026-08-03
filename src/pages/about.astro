@@ -1,0 +1,143 @@
+---
+// Лаборатория. Перенесено из src/legacy/pages/About.tsx дословно.
+// <Reveal> → class="reveal", SectionHead → Astro-версия со слотами.
+// Иконки хранятся как компоненты (не как <Icon />) — см. комментарий в content.tsx.
+import Base from '../layouts/Base.astro'
+import SectionHead from '../components/SectionHead.astro'
+import { IconSearch, IconMap, IconShield, IconChart } from '../data/icons'
+
+const values = [
+  {
+    icon: IconChart,
+    title: 'Метрика вместо магии',
+    text: 'Любой проект начинается с цифры, которую мы собираемся изменить: часы, конверсия, стоимость задачи. Если эффект нельзя измерить — значит, нельзя доказать, что он был. За такое не беремся.',
+  },
+  {
+    icon: IconSearch,
+    title: 'Системный подход',
+    text: 'Не «настроили и забыли», а карта внедрения: какие процессы автоматизируем, в каком порядке и что это даст на каждом шаге. Начинаем всегда с самого окупаемого.',
+  },
+  {
+    icon: IconMap,
+    title: 'Готовые методологии',
+    text: 'Библиотека GPT-ассистентов и шаблонов для 15+ ниш: от HR-скрининга до карточек маркетплейсов. Вы платите за адаптацию под свой бизнес, а не за изобретение велосипеда.',
+  },
+  {
+    icon: IconShield,
+    title: 'Работа без посредников',
+    text: 'Лаборатория — это эксперт, а не конвейер агентства. Вы общаетесь напрямую с тем, кто делает вашу задачу: по NDA, с поддержкой после сдачи и без «уточню у команды и вернусь».',
+  },
+]
+
+const stack = [
+  'ChatGPT / GPT-4o',
+  'Claude',
+  'DeepSeek',
+  'Midjourney',
+  'Flux',
+  'Kandinsky',
+  'Kling / Luma / Pika',
+  'GPT Sheets',
+  'SendPulse',
+  'Google Workspace',
+]
+
+const expertise = [
+  'Архитектура языковых моделей: GPT и MoE, пайплайн pre-training → post-training → RL',
+  '16 техник промпт-инжиниринга: ролевые, каскадные, цепочки промптов',
+  'Создание GPT-ассистентов: системные инструкции, tone of voice, работа с файлами',
+  'Библиотека ассистентов: маркетинг, продажи, HR, юристы, e-commerce, поддержка',
+  'Каскады в GPT Sheets: шаблоны из 10–100 промптов для 15+ ниш',
+  'Генерация изображений и видео: Midjourney, Flux, Kandinsky, Kling',
+]
+---
+
+<Base
+  title="Лаборатория — Невариум ЛАБ ИИ"
+  description="Принципы работы: метрика вместо магии, системный подход, библиотека решений для 15+ ниш, прямая работа с экспертом по NDA."
+>
+  <section class="page-hero">
+    <div class="container">
+      <div class="reveal">
+        <span class="eyebrow">Лаборатория</span>
+        <h1 class="h1">
+          Почему <span class="text-grad">«лаборатория»</span>, а не агентство
+        </h1>
+        <p class="lead">
+          Потому что мы не продаём часы команды. Мы разбираем ваш процесс на составляющие,
+          собираем решение из проверенных методологий и передаём его так, чтобы оно
+          работало без нас.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 2rem" aria-label="Принципы">
+    <div class="container">
+      <div class="values-list">
+        {
+          values.map((v, i) => {
+            const Icon = v.icon
+            return (
+              <div class="reveal" style={`--reveal-delay: ${(i % 2) * 0.1}s`}>
+                <div class="glass glass--hover card" style="height: 100%">
+                  <div class="card__icon">
+                    <Icon />
+                  </div>
+                  <h2 class="h3">{v.title}</h2>
+                  <p>{v.text}</p>
+                </div>
+              </div>
+            )
+          })
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-label="Экспертиза">
+    <div class="container">
+      <div class="grid-2" style="gap: 2.5rem; align-items: start">
+        <div>
+          <SectionHead eyebrow="Экспертиза">
+            Что внутри лаборатории
+            <Fragment slot="lead">
+              Фундамент — системная подготовка по работе с языковыми моделями: от устройства
+              архитектур до прикладных методологий.
+            </Fragment>
+          </SectionHead>
+          <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.8rem">
+            {
+              expertise.map((e, i) => (
+                <li class="reveal" style={`--reveal-delay: ${i * 0.05}s`}>
+                  <div style="display: flex; gap: 0.7rem; color: var(--ink-soft)">
+                    <span style="color: var(--cyan); font-weight: 800">✓</span>{e}
+                  </div>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="reveal" style="--reveal-delay: 0.15s">
+          <div class="glass card">
+            <h2 class="h3">Рабочий стек</h2>
+            <p>
+              Инструменты подбираем под задачу, а не наоборот — поэтому в стеке и западные,
+              и российские модели.
+            </p>
+            <div class="chips">
+              {stack.map((s) => <span class="chip">{s}</span>)}
+            </div>
+            <div
+              class="glass"
+              style="padding: 1.1rem 1.3rem; border-radius: 14px; margin-top: 0.6rem; font-size: 0.94rem; color: var(--ink-soft)"
+            >
+              <strong class="text-grad">Принцип выбора:</strong> если задачу решает более простой
+              и дешёвый инструмент — берём его. Ваш бюджет не должен кормить хайп.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,27 @@
+---
+// Заголовок секции. Перенесено из SectionHead.tsx; <Reveal> заменён на
+// class="reveal" (наблюдатель живёт в Base.astro).
+// title и lead принимаются слотами, потому что внутри бывает разметка
+// (например, <span class="text-grad">).
+type Props = {
+  eyebrow: string
+  center?: boolean
+}
+
+const { eyebrow, center } = Astro.props
+const hasLead = Astro.slots.has('lead')
+---
+
+<div class={center ? 'reveal section-head section-head--center' : 'reveal section-head'}>
+  <div style={center ? 'margin-inline: auto; text-align: center' : undefined}>
+    <span class="eyebrow" style={center ? 'justify-content: center' : undefined}>{eyebrow}</span>
+    <h2 class="h2"><slot /></h2>
+    {
+      hasLead && (
+        <p class="lead" style={center ? 'margin-inline: auto' : undefined}>
+          <slot name="lead" />
+        </p>
+      )
+    }
+  </div>
+</div>
