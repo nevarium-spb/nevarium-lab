@@ -1,7 +1,10 @@
 ---
-// Базовый макет страницы. В Фазе 1 — только оболочка документа (head + слот).
-// Шапка, подвал, живой фон и чат добавляются в Фазе 2.
+// Базовый макет: оболочка документа и общие части сайта.
 import '../styles/global.css'
+import Header from '../components/Header'
+import Footer from '../components/Footer.astro'
+import LiveBackground from '../components/LiveBackground'
+import Chatbot from '../components/Chatbot'
 
 type Props = {
   title: string
@@ -9,6 +12,7 @@ type Props = {
 }
 
 const { title, description } = Astro.props
+const pathname = Astro.url.pathname
 ---
 
 <!doctype html>
@@ -20,17 +24,21 @@ const { title, description } = Astro.props
     {/*
       Тема до первой отрисовки — без мигания.
       is:inline обязателен: без него Astro превратит скрипт в отложенный модуль,
-      и при загрузке в тёмной теме экран мигнёт белым. Скрипт перенесён дословно
-      из старого index.html.
+      и при загрузке в тёмной теме экран мигнёт белым.
+      Раньше цвет строки браузера (theme-color) выставлял ThemeProvider уже
+      после запуска React — теперь это делается здесь же, до первой отрисовки.
     */}
     <script is:inline>
       ;(function () {
+        var t = 'dark'
         try {
-          var t = localStorage.getItem('nevarium-theme')
-          document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark')
+          if (localStorage.getItem('nevarium-theme') === 'light') t = 'light'
         } catch (e) {
-          document.documentElement.setAttribute('data-theme', 'dark')
+          /* приватный режим */
         }
+        document.documentElement.setAttribute('data-theme', t)
+        var m = document.querySelector('meta[name="theme-color"]')
+        if (m) m.content = t === 'light' ? '#eef1fb' : '#0d1030'
       })()
     </script>
     <title>{title}</title>
@@ -52,7 +60,21 @@ const { title, description } = Astro.props
     </noscript>
   </head>
   <body>
-    <slot />
+    <a class="skip-link" href="#main">Перейти к содержимому</a>
+
+    {/* Декоративный фон — грузится в простое, не задерживая страницу. */}
+    <LiveBackground client:idle />
+
+    {/* Текущий адрес приходит пропом: react-router больше нет. */}
+    <Header pathname={pathname} client:load />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <Chatbot client:idle />
 
     {/*
       Замена React-компонента Reveal (он оборачивал контент ~54 раза и тянул

@@ -1,44 +1,52 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { useSyncExternalStore } from 'react'
 
-type Theme = 'dark' | 'light'
-type Ctx = { theme: Theme; toggle: () => void }
+/**
+ * Тема оформления.
+ *
+ * Источник правды — атрибут data-theme на <html>: его выставляет inline-скрипт
+ * в Base.astro ещё до первой отрисовки, и по нему работает весь CSS.
+ *
+ * Раньше тему держал React-контекст (ThemeProvider оборачивал всё приложение).
+ * В Astro так нельзя: шапка, живой фон и чат — независимые «острова», то есть
+ * отдельные React-приложения, и общий контекст между ними не передаётся.
+ * Поэтому острова подписываются на сам атрибут через событие.
+ */
 
-const ThemeContext = createContext<Ctx>({ theme: 'dark', toggle: () => {} })
+export type Theme = 'dark' | 'light'
 
 const STORAGE_KEY = 'nevarium-theme'
+const EVENT = 'nevarium-theme-change'
 
-function initialTheme(): Theme {
-  if (typeof document !== 'undefined') {
-    const attr = document.documentElement.getAttribute('data-theme')
-    if (attr === 'light' || attr === 'dark') return attr
-  }
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY)
-    if (saved === 'light' || saved === 'dark') return saved
-  } catch {
-    /* приватный режим */
-  }
+function subscribe(onChange: () => void) {
+  window.addEventListener(EVENT, onChange)
+  return () => window.removeEventListener(EVENT, onChange)
+}
+
+function getSnapshot(): Theme {
+  return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark'
+}
+
+/** На сервере выбора нет — тёмная, как и в inline-скрипте по умолчанию. */
+function getServerSnapshot(): Theme {
   return 'dark'
 }
 
-export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(initialTheme)
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme)
-    document.documentElement.style.colorScheme = theme
-    const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')
-    if (meta) meta.content = theme === 'light' ? '#eef1fb' : '#0d1030'
-    try {
-      localStorage.setItem(STORAGE_KEY, theme)
-    } catch {
-      /* приватный режим */
-    }
-  }, [theme])
-
-  const toggle = () => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))
-
-  return <ThemeContext.Provider value={{ theme, toggle }}>{children}</ThemeContext.Provider>
+export function setTheme(theme: Theme) {
+  const root = document.documentElement
+  root.setAttribute('data-theme', theme)
+  root.style.colorScheme = theme
+  const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')
+  if (meta) meta.content = theme === 'light' ? '#eef1fb' : '#0d1030'
+  try {
+    localStorage.setItem(STORAGE_KEY, theme)
+  } catch {
+    /* приватный режим */
+  }
+  // Будит все острова разом — и переключатель в шапке, и живой фон.
+  window.dispatchEvent(new Event(EVENT))
 }
 
-export const useTheme = () => useContext(ThemeContext)
+export function useTheme() {
+  const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
+  return { theme, toggle: () => setTheme(theme === 'dark' ? 'light' : 'dark') }
+}

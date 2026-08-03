@@ -1,0 +1,57 @@
+---
+// Подвал. Перенесено из src/components/Footer.tsx, <Link> заменён на обычные
+// ссылки. Год в копирайте теперь считается при сборке, а не в браузере —
+// для статичного сайта это то же самое, сайт пересобирается при каждом деплое.
+// Logo — React-компонент, но без client:-директивы Astro отрисует его
+// на сервере чистым HTML, без JS.
+import Logo from './Logo'
+
+const year = new Date().getFullYear()
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div>
+        <Logo />
+        <p class="footer__about">
+          Лаборатория внедрения искусственного интеллекта в малый и средний бизнес.
+          Ассистенты, боты, автоматизация и обучение команд — с метрикой, зафиксированной
+          до старта, и работой по NDA.
+        </p>
+      </div>
+      <div class="footer__col">
+        <div class="footer__title">Навигация</div>
+        <a href="/services">Услуги</a>
+        <a href="/cases">Кейсы</a>
+        <a href="/pricing">Тарифы</a>
+        <a href="/about">Лаборатория</a>
+      </div>
+      <div class="footer__col">
+        <div class="footer__title">Услуги</div>
+        <a href="/services">GPT-ассистенты</a>
+        <a href="/services">Чат-боты</a>
+        <a href="/services">ИИ-контент</a>
+        <a href="/services">Обучение команд</a>
+      </div>
+      <div class="footer__col">
+        <div class="footer__title">Связь</div>
+        <a href="/contact">Почта и телефон</a>
+        <a
+          href="https://max.ru/join/4u3kB47o-53REUPLuMBIl2uHDiMAmAFto24mxJ1wgnk"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Мы в MAX
+        </a>
+        <a href="/contact">Обсудить задачу</a>
+        <a href="/privacy">Обработка данных</a>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>ИП Макеева Марина Александровна</span>
+      <span style="text-align: center; flex: 1">© {year} Nevarium AI LAB. All rights reserved.</span>
+      <span>Сделано с ИИ — как и всё, что мы делаем.</span>
+    </div>
+  </div>
+</footer>

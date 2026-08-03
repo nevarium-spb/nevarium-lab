@@ -1,7 +1,14 @@
-import { useEffect, useState } from 'react'
-import { NavLink, Link, useLocation } from 'react-router-dom'
+import { useEffect, useState, type CSSProperties } from 'react'
 import Logo from './Logo'
 import ThemeToggle from './ThemeToggle'
+
+// Шапка. Остров: нужен JS для класса при прокрутке, мобильного меню и
+// переключателя темы. Разметка и ссылки при этом отрисовываются на сервере —
+// поисковики видят навигацию в готовом HTML.
+//
+// react-router больше нет: переходы между страницами — обычная загрузка.
+// Поэтому текущий адрес приходит пропом из Astro, а меню не нужно закрывать
+// при переходе (страница перезагружается сама).
 
 const links = [
   { to: '/services', label: 'Услуги' },
@@ -11,10 +18,17 @@ const links = [
   { to: '/contact', label: 'Контакты' },
 ]
 
-export default function Header() {
+/** Адреса сравниваем без хвостового слэша: Astro отдаёт /services/, в ссылках — /services. */
+function isActive(href: string, pathname: string, exact = false) {
+  const norm = (s: string) => (s.length > 1 ? s.replace(/\/$/, '') : s)
+  const a = norm(href)
+  const b = norm(pathname)
+  return exact ? a === b : b === a || b.startsWith(a + '/')
+}
+
+export default function Header({ pathname }: { pathname: string }) {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
-  const { pathname } = useLocation()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12)
@@ -22,10 +36,6 @@ export default function Header() {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
-
-  useEffect(() => {
-    setOpen(false)
-  }, [pathname])
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : ''
@@ -41,20 +51,20 @@ export default function Header() {
           <Logo />
           <nav className="nav" aria-label="Основная навигация">
             {links.map((l) => (
-              <NavLink
+              <a
                 key={l.to}
-                to={l.to}
-                className={({ isActive }) => `nav__link ${isActive ? 'is-active' : ''}`}
+                href={l.to}
+                className={`nav__link ${isActive(l.to, pathname) ? 'is-active' : ''}`}
               >
                 {l.label}
-              </NavLink>
+              </a>
             ))}
           </nav>
           <div className="header__actions">
             <ThemeToggle />
-            <Link to="/contact" className="btn btn--primary header__cta">
+            <a href="/contact" className="btn btn--primary header__cta">
               Обсудить проект
-            </Link>
+            </a>
           </div>
           <button
             className={`burger ${open ? 'is-open' : ''}`}
@@ -72,22 +82,21 @@ export default function Header() {
       <div className={`drawer ${open ? 'is-open' : ''}`} aria-hidden={!open}>
         <nav className="drawer__nav container" aria-label="Мобильная навигация">
           {[{ to: '/', label: 'Главная' }, ...links].map((l, i) => (
-            <NavLink
+            <a
               key={l.to}
-              to={l.to}
-              end={l.to === '/'}
-              className={({ isActive }) => `drawer__link ${isActive ? 'is-active' : ''}`}
-              style={{ '--i': i } as React.CSSProperties}
+              href={l.to}
+              className={`drawer__link ${isActive(l.to, pathname, l.to === '/') ? 'is-active' : ''}`}
+              style={{ '--i': i } as CSSProperties}
               tabIndex={open ? 0 : -1}
             >
               {l.label}
-            </NavLink>
+            </a>
           ))}
           <div className="drawer__foot">
             <ThemeToggle />
-            <Link to="/contact" className="btn btn--primary" tabIndex={open ? 0 : -1}>
+            <a href="/contact" className="btn btn--primary" tabIndex={open ? 0 : -1}>
               Обсудить проект
-            </Link>
+            </a>
           </div>
         </nav>
       </div>
