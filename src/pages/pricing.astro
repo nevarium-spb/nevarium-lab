@@ -1,0 +1,70 @@
+---
+// Тарифы. Перенесено из src/legacy/pages/Pricing.tsx дословно.
+// Тарифные карточки статичны; интерактивен только FAQ-аккордеон — вынесен
+// в FaqAccordion.tsx.
+import Base from '../layouts/Base.astro'
+import SectionHead from '../components/SectionHead.astro'
+import FaqAccordion from '../components/FaqAccordion'
+import { plans, faqs } from '../data/content'
+---
+
+<Base
+  title="Тарифы — Невариум ЛАБ ИИ"
+  description="Три формата работы: Старт от 39 000 ₽, Система — комплексное внедрение, Партнёр — ИИ-директор на аутсорсе. Метрика фиксируется до старта."
+>
+  <section class="page-hero">
+    <div class="container">
+      <div class="reveal">
+        <span class="eyebrow">Тарифы</span>
+        <h1 class="h1">
+          Честные цены <span class="text-grad">за измеримый результат</span>
+        </h1>
+        <p class="lead">
+          Платите за решённую задачу, а не за часы команды. До старта фиксируем метрику
+          успеха — чтобы вы и мы одинаково понимали, что считается результатом.
+          Работаем по NDA.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 2rem">
+    <div class="container">
+      <div class="pricing-grid">
+        {
+          plans.map((p, i) => (
+            <div class="reveal" style={`--reveal-delay: ${i * 0.1}s`}>
+              <div class={`glass plan ${p.featured ? 'plan--featured' : ''}`} style="height: 100%">
+                {p.featured && <span class="plan__tag">Оптимальный баланс</span>}
+                <h2 class="h3">{p.name}</h2>
+                <div class="plan__price">
+                  {p.price} <small>{p.period}</small>
+                </div>
+                <p class="plan__desc">{p.desc}</p>
+                <ul>
+                  {p.features.map((f) => <li>{f}</li>)}
+                </ul>
+                <a href="/contact" class={`btn ${p.featured ? 'btn--primary' : 'btn--ghost'}`}>
+                  {p.cta}
+                </a>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-label="Частые вопросы">
+    <div class="container">
+      <SectionHead eyebrow="FAQ">
+        Частые вопросы
+        <Fragment slot="lead">
+          Здесь — то, что спрашивают до старта чаще всего. Не нашли свой вопрос — спросите
+          Неву в чате справа внизу.
+        </Fragment>
+      </SectionHead>
+      <FaqAccordion faqs={faqs} client:visible />
+    </div>
+  </section>
+</Base>

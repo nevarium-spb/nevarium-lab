@@ -1,0 +1,118 @@
+---
+// Контакты. Перенесено из src/legacy/pages/Contact.tsx дословно.
+// Реквизиты и почта/телефон (SVG-текст — защита от парсеров-скрейперов)
+// статичны; интерактивна только форма — она вынесена в ContactForm.tsx.
+import Base from '../layouts/Base.astro'
+import ContactForm from '../components/ContactForm'
+import { IconMail, IconMax, IconClock } from '../data/icons'
+---
+
+<Base
+  title="Контакты — Невариум ЛАБ ИИ"
+  description="Расскажите о задаче — вернёмся с ответом в течение рабочего дня. Работаем по NDA."
+>
+  <section class="page-hero">
+    <div class="container">
+      <div class="reveal">
+        <span class="eyebrow">Контакты</span>
+        <h1 class="h1">
+          Обсудим <span class="text-grad">вашу задачу</span>
+        </h1>
+        <p class="lead">
+          Опишите ситуацию своими словами — без технических терминов. Вернёмся с ответом
+          в течение рабочего дня и скажем прямо, окупится здесь ИИ или нет. Или спросите
+          Неву в чате: она онлайн круглосуточно.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 2rem">
+    <div class="container contact-grid">
+      <div class="reveal">
+        <div class="glass contact-info">
+          <div class="contact-info__row">
+            <div class="card__icon">
+              <IconMail />
+            </div>
+            <div>
+              <div class="contact-info__label">Почта</div>
+              <a class="contact-info__value" href="mailto:nevarium-lab@yandex.com">
+                <svg width="200" height="28" viewBox="0 0 200 28" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block">
+                  <text x="0" y="20" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="currentColor" letter-spacing="0.5">
+                    nevarium-lab@yandex.com
+                  </text>
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div class="contact-info__row">
+            <div class="card__icon">
+              <IconMax />
+            </div>
+            <div>
+              <div class="contact-info__label">Max</div>
+              <a
+                class="contact-info__value"
+                href="https://max.ru/join/4u3kB47o-53REUPLuMBIl2uHDiMAmAFto24mxJ1wgnk"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Мы в MAX
+              </a>
+            </div>
+          </div>
+          <div class="contact-info__row">
+            <div class="card__icon">
+              <IconClock />
+            </div>
+            <div>
+              <div class="contact-info__label">Отвечаем</div>
+              <div class="contact-info__value">Пн–Пт, 10:00–19:00 МСК</div>
+            </div>
+          </div>
+          <div class="contact-info__row">
+            <div class="card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+            </div>
+            <div>
+              <div class="contact-info__label">Телефон</div>
+              <svg width="140" height="28" viewBox="0 0 140 28" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block">
+                <text x="0" y="20" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="currentColor" letter-spacing="0.5">
+                  +7 921 008-16-06
+                </text>
+              </svg>
+            </div>
+          </div>
+          <div
+            class="glass"
+            style="padding: 1.1rem 1.3rem; border-radius: 14px; font-size: 0.92rem; color: var(--ink-soft)"
+          >
+            <strong style="color: var(--ink)">ИП Макеева Марина Александровна</strong>
+            <br />
+            ИНН 770878422219
+            <br />
+            ОГРНИП 326784700057660
+            <br />
+            Санкт-Петербург, Витебский проспект д. 41К3 -131
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal" style="--reveal-delay: 0.1s">
+        <div class="glass" style="padding: 2rem">
+          {/*
+            client:load, не client:visible: форма отправляет персональные
+            данные. Если гидратация задержится (сбой IntersectionObserver,
+            блокировщик), клик по кнопке уйдёт в нативную отправку формы —
+            GET-запрос без сервера, который положит имя и телефон в URL и
+            историю браузера. Тише, чем честная ошибка, но гораздо хуже.
+          */}
+          <ContactForm client:load />
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,31 @@
+---
+// Страница «не найдено». Перенесено из src/legacy/pages/NotFound.tsx дословно.
+// Файл называется 404.astro по соглашению Astro: статичные хосты (в т.ч.
+// Vercel) сами отдают dist/404.html при реальном 404 без отдельной настройки.
+//
+// Оригинал не передавал usePageMeta(...) второй аргумент (description), из-за
+// чего в старом SPA 404-страница наследовала описание предыдущей страницы —
+// это был баг, отмеченный независимым аудитом. В статичном Astro-HTML такой
+// проблемы нет, но раз уж переносим — дадим содержательное описание, а не
+// пустую строку.
+import Base from '../layouts/Base.astro'
+
+const description = 'Такой страницы нет. Вернитесь на главную или посмотрите услуги Невариум ЛАБ ИИ.'
+---
+
+<Base title="Страница не найдена — Невариум ЛАБ ИИ" description={description}>
+  <section class="section" style="padding-top: calc(var(--header-h) + 6rem); min-height: 70vh">
+    <div class="container" style="text-align: center">
+      <div class="reveal">
+        <div class="h1 text-grad" style="font-family: var(--font-display); font-size: clamp(4rem, 3rem + 8vw, 8rem); font-weight: 700">
+          404
+        </div>
+        <h1 class="h2" style="margin-top: 1rem">Такой страницы нет</h1>
+        <p class="lead" style="margin-inline: auto; margin-top: 1rem">
+          Даже нейросеть иногда галлюцинирует ссылками. Вернёмся на главную?
+        </p>
+        <a href="/" class="btn btn--primary btn--lg" style="margin-top: 2rem">На главную</a>
+      </div>
+    </div>
+  </section>
+</Base>
