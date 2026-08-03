@@ -69,13 +69,13 @@ export default function ContactForm() {
           />
         </div>
         <div>
-          <label htmlFor="cf-contact">Телефон или Telegram *</label>
+          <label htmlFor="cf-contact">Телефон или Max *</label>
           <input
             id="cf-contact"
             name="contact"
             required
             maxLength={254}
-            placeholder="+7 900 000-00-00 или @nick (Max/Telegram)"
+            placeholder="+7 900 000-00-00 или ник в Max"
             autoComplete="tel"
           />
         </div>
