@@ -1,9 +1,31 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { botNodes, routeFreeText } from '../data/bot'
 import { sendLead } from '../lib/leads'
 import { IconBot, IconChat, IconClose, IconSend } from '../data/icons'
 
 type Message = { from: 'bot' | 'user'; text: string }
+
+/**
+ * Ссылку на политику в тексте узла lead_phone (bot.ts) раньше выводили как
+ * обычный текст "(/privacy)" — не кликабельную. Слова не меняем, только
+ * превращаем этот фрагмент в настоящую ссылку.
+ */
+function renderMessage(text: string): ReactNode {
+  const parts = text.split('/privacy')
+  if (parts.length === 1) return text
+  const nodes: ReactNode[] = []
+  parts.forEach((part, i) => {
+    nodes.push(part)
+    if (i < parts.length - 1) {
+      nodes.push(
+        <a key={i} href="/privacy" style={{ color: 'inherit', textDecoration: 'underline' }}>
+          /privacy
+        </a>,
+      )
+    }
+  })
+  return nodes
+}
 
 const STORAGE_KEY = 'nevarium-chat'
 
@@ -124,7 +146,7 @@ export default function Chatbot() {
           <div className="chat__body" ref={bodyRef}>
             {messages.map((m, i) => (
               <div key={i} className={`msg msg--${m.from}`}>
-                {m.text}
+                {renderMessage(m.text)}
               </div>
             ))}
             {typing && (

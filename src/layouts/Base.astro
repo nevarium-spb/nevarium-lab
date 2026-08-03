@@ -9,10 +9,37 @@ import Chatbot from '../components/Chatbot'
 type Props = {
   title: string
   description: string
+  /** Только для 404 — реальной страницы под этим URL нет, индексировать нечего. */
+  noindex?: boolean
 }
 
-const { title, description } = Astro.props
+const { title, description, noindex = false } = Astro.props
 const pathname = Astro.url.pathname
+// У 404 нет своего настоящего URL — «/404/» ничего не значит для поисковика,
+// поэтому canonical для неё ведёт на главную, а не на саму себя.
+const canonicalURL = noindex ? new URL('/', Astro.site) : new URL(pathname, Astro.site)
+const ogImageURL = new URL('/og-image.png', Astro.site)
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: 'Невариум ЛАБ ИИ',
+  description:
+    'Лаборатория внедрения искусственного интеллекта в малый и средний бизнес: GPT-ассистенты, чат-боты, автоматизация, обучение команд.',
+  url: 'https://nevarium-lab.ru',
+  logo: new URL('/logo-mark.png', Astro.site).toString(),
+  image: ogImageURL.toString(),
+  email: 'nevarium-lab@yandex.com',
+  telephone: '+7-921-008-16-06',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Витебский проспект, д. 41, к. 3, кв. 131',
+    addressLocality: 'Санкт-Петербург',
+    postalCode: '196244',
+    addressCountry: 'RU',
+  },
+  sameAs: ['https://max.ru/join/4u3kB47o-53REUPLuMBIl2uHDiMAmAFto24mxJ1wgnk'],
+}
 ---
 
 <!doctype html>
@@ -43,8 +70,30 @@ const pathname = Astro.url.pathname
     </script>
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="icon" type="image/png" href="/favicon.png" />
     <!-- Шрифты — self-hosted, см. src/styles/global.css -->
+
+    {/* Open Graph — своя карточка на каждой странице, а не одна на весь сайт. */}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Невариум ЛАБ ИИ" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+
+    {/* Organization — на каждой странице: помогает поисковикам связать сайт
+    с конкретным юрлицом (ИП), а не просто с доменным именем. */}
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(organizationSchema)} />
     {/*
       Без JS блоки .reveal остались бы с opacity: 0, то есть страница была бы
       пустой. Раньше это было неважно (весь сайт рисовался джаваскриптом), но

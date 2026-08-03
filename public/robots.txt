@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nevarium-lab.ru/sitemap-index.xml

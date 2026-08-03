@@ -3,12 +3,30 @@
 // <Reveal> → class="reveal", <Link> → обычная ссылка.
 import Base from '../layouts/Base.astro'
 import { services } from '../data/content'
+
+// Список услуг для поисковиков — по одному Service на каждую карточку ниже.
+const servicesSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: services.map((s, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: {
+      '@type': 'Service',
+      name: s.title,
+      description: s.short,
+      provider: { '@type': 'ProfessionalService', name: 'Невариум ЛАБ ИИ' },
+      areaServed: 'RU',
+    },
+  })),
+}
 ---
 
 <Base
   title="Услуги — Невариум ЛАБ ИИ"
   description="GPT-ассистенты, чат-боты, ИИ-контент, автоматизация в таблицах, визуал, обучение команд и разработка сайтов. Под ключ и по NDA."
 >
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(servicesSchema)} />
   <section class="page-hero">
     <div class="container">
       <div class="reveal">
