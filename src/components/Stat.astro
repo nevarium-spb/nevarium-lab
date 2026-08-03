@@ -3,9 +3,10 @@
 // Заменяет React-компонент Stat.tsx: ради четырёх цифр на главной тянуть
 // React на всю страницу не нужно.
 //
-// Отличие от прежней версии: в HTML сразу пишется настоящее значение, а не 0.
-// Так число видно поисковикам и тем, у кого не отработал JS. Скрипт обнуляет
-// его и разгоняет обратно уже при прокрутке.
+// В HTML сразу пишется настоящее значение, а не 0 — число видно поисковикам
+// и тем, у кого не отработал JS. Наблюдатель, который обнуляет и разгоняет
+// его обратно, общий на весь сайт и живёт в Base.astro (см. [data-stat]) —
+// это тот же счётчик, что использует HeroPanel для метрик в hero.
 type Props = {
   value: number
   prefix?: string
@@ -17,48 +18,6 @@ const { value, prefix = '', suffix = '', label } = Astro.props
 ---
 
 <div class="glass stat" data-stat data-value={value} data-prefix={prefix} data-suffix={suffix}>
-  <div class="stat__value">{prefix}{value.toLocaleString('ru-RU')}{suffix}</div>
+  <div class="stat__value" data-stat-value>{prefix}{value.toLocaleString('ru-RU')}{suffix}</div>
   <div class="stat__label">{label}</div>
 </div>
-
-<script>
-  const stats = document.querySelectorAll<HTMLElement>('[data-stat]')
-
-  if (stats.length && 'IntersectionObserver' in window) {
-    const render = (el: HTMLElement, n: number) => {
-      const out = el.querySelector('.stat__value')
-      if (out) {
-        out.textContent =
-          (el.dataset.prefix ?? '') + n.toLocaleString('ru-RU') + (el.dataset.suffix ?? '')
-      }
-    }
-
-    // Обнуляем до старта анимации — но только когда JS точно жив.
-    stats.forEach((el) => render(el, 0))
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return
-          const el = entry.target as HTMLElement
-          io.unobserve(el)
-
-          const target = Number(el.dataset.value ?? 0)
-          const t0 = performance.now()
-          const dur = 1400
-
-          const tick = (t: number) => {
-            const p = Math.min((t - t0) / dur, 1)
-            const eased = 1 - Math.pow(1 - p, 3)
-            render(el, Math.round(target * eased))
-            if (p < 1) requestAnimationFrame(tick)
-          }
-          requestAnimationFrame(tick)
-        })
-      },
-      { threshold: 0.4 },
-    )
-
-    stats.forEach((el) => io.observe(el))
-  }
-</script>

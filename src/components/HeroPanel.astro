@@ -1,0 +1,54 @@
+---
+// Дашборд-панель героя «Индиго Лайв»: метрики + анимированный график внедрения.
+// Перенесено из HeroPanel.tsx (был чистым React-компонентом без интерактивности,
+// поэтому конвертация в Astro ничего не убирает — просто на странице становится
+// на один React-компонент меньше).
+//
+// Метрики используют ту же разметку [data-stat]/[data-stat-value], что и
+// Stat.astro — общий наблюдатель в Base.astro разгоняет числа от нуля при
+// попадании панели во вьюпорт, как и в блоке «Результаты в цифрах».
+---
+
+<div class="glass hero-panel">
+  <div class="hero-panel__head">
+    <div class="hero-panel__title">Панель внедрения</div>
+    <span class="hero-panel__tag">
+      <i aria-hidden="true"></i> в работе
+    </span>
+  </div>
+  <div class="hero-panel__metrics">
+    <div class="hero-panel__metric" data-stat data-value="70" data-suffix="%">
+      <div class="v" data-stat-value>70%</div>
+      <div class="l">рутины автоматизировано</div>
+    </div>
+    <div class="hero-panel__metric" data-stat data-value="38" data-prefix="+" data-suffix="%">
+      <div class="v" data-stat-value>+38%</div>
+      <div class="l">конверсия в заявку</div>
+    </div>
+  </div>
+  <div class="hero-panel__chart">
+    <svg viewBox="0 0 300 100" preserveAspectRatio="none" role="img" aria-label="Рост показателей после внедрения ИИ">
+      <defs>
+        <linearGradient id="hp-line" x1="0" x2="1">
+          <stop offset="0" stop-color="#38bdf8"></stop>
+          <stop offset="1" stop-color="#4f46e5"></stop>
+        </linearGradient>
+        <linearGradient id="hp-fill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#6366f1" stop-opacity="0.28"></stop>
+          <stop offset="1" stop-color="#6366f1" stop-opacity="0"></stop>
+        </linearGradient>
+      </defs>
+      <polygon points="0,80 50,68 100,72 150,45 200,50 250,25 300,14 300,100 0,100" fill="url(#hp-fill)"></polygon>
+      <polyline
+        class="hero-panel__spark"
+        points="0,80 50,68 100,72 150,45 200,50 250,25 300,14"
+        fill="none"
+        stroke="url(#hp-line)"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      ></polyline>
+      <circle cx="300" cy="14" r="4" fill="#38bdf8"></circle>
+    </svg>
+  </div>
+</div>

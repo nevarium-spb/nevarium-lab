@@ -99,5 +99,57 @@ const pathname = Astro.url.pathname
         revealables.forEach((el) => io.observe(el))
       }
     </script>
+
+    {/*
+      Счётчики цифр — разгон от нуля при попадании во вьюпорте. Общий на весь
+      сайт: используется и в блоке «Результаты в цифрах» (Stat.astro), и в
+      панели внедрения в hero (HeroPanel.astro) — разметка одна и та же
+      ([data-stat] + [data-stat-value]), поэтому один наблюдатель на оба места.
+    */}
+    <script>
+      const stats = document.querySelectorAll<HTMLElement>('[data-stat]')
+
+      if (stats.length) {
+        const render = (el: HTMLElement, n: number) => {
+          const out = el.querySelector('[data-stat-value]')
+          if (out) {
+            out.textContent =
+              (el.dataset.prefix ?? '') + n.toLocaleString('ru-RU') + (el.dataset.suffix ?? '')
+          }
+        }
+
+        if (!('IntersectionObserver' in window)) {
+          // Без observer'а значение и так уже настоящее в HTML — трогать не нужно.
+        } else {
+          // Обнуляем до старта анимации — но только когда JS точно жив.
+          stats.forEach((el) => render(el, 0))
+
+          const io = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (!entry.isIntersecting) return
+                const el = entry.target as HTMLElement
+                io.unobserve(el)
+
+                const target = Number(el.dataset.value ?? 0)
+                const t0 = performance.now()
+                const dur = 1400
+
+                const tick = (t: number) => {
+                  const p = Math.min((t - t0) / dur, 1)
+                  const eased = 1 - Math.pow(1 - p, 3)
+                  render(el, Math.round(target * eased))
+                  if (p < 1) requestAnimationFrame(tick)
+                }
+                requestAnimationFrame(tick)
+              })
+            },
+            { threshold: 0.4 },
+          )
+
+          stats.forEach((el) => io.observe(el))
+        }
+      }
+    </script>
   </body>
 </html>
