@@ -162,3 +162,23 @@ export const IconCheck = ({ size = 24 }: IconProps) => (
     <path d="m8.5 12.2 2.4 2.4 4.8-5" />
   </svg>
 )
+
+export const IconFunnel = ({ size = 24 }: IconProps) => (
+  <svg {...base(size)}>
+    <path d="M4 5h16l-6 8v6l-4 2v-8L4 5Z" />
+  </svg>
+)
+
+export const IconUser = ({ size = 24 }: IconProps) => (
+  <svg {...base(size)}>
+    <circle cx="12" cy="8" r="3.5" />
+    <path d="M5 20c0-4 3-6.5 7-6.5s7 2.5 7 6.5" />
+  </svg>
+)
+
+export const IconPlay = ({ size = 24 }: IconProps) => (
+  <svg {...base(size)}>
+    <circle cx="12" cy="12" r="8.5" />
+    <path d="M10 8.5v7l6-3.5-6-3.5Z" fill="currentColor" stroke="none" />
+  </svg>
+)
