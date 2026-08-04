@@ -44,39 +44,39 @@ const servicesSchema = {
   </section>
 
   <section class="section" style="padding-top: 1rem">
-    <div class="container" style="display: flex; flex-direction: column; gap: 1.25rem">
+    <div class="container grid-2">
       {
-        services.map((s) => {
+        services.map((s, i) => {
           const Icon = s.icon
           return (
-          <div class="reveal" style="--reveal-delay: 0.05s">
-            <article class="glass card" id={s.id}>
-              <div class="grid-2" style="gap: 2rem; align-items: start">
-                <div style="display: flex; flex-direction: column; gap: 0.9rem">
-                  <div class="card__icon"><Icon /></div>
-                  <h2 class="h3">{s.title}</h2>
-                  <p>{s.full}</p>
-                  <div class="glass" style="padding: 1rem 1.2rem; border-radius: 14px; font-size: 0.94rem">
-                    <strong class="text-grad">Результат:</strong>{' '}
-                    <span style="color: var(--ink-soft)">{s.result}</span>
-                  </div>
-                </div>
-                <div>
-                  <div style="font-weight: 800; font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.9rem">
-                    Что входит
-                  </div>
-                  <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.6rem">
-                    {s.includes.map((item) => (
-                      <li style="display: flex; gap: 0.6rem; color: var(--ink-soft); font-size: 0.95rem">
-                        <span style="color: var(--cyan); font-weight: 800">✓</span>{item}
-                      </li>
-                    ))}
-                  </ul>
-                  <a href="/contact" class="btn btn--ghost" style="margin-top: 1.4rem">
-                    Обсудить задачу <span aria-hidden="true">→</span>
-                  </a>
-                </div>
+          <div class="reveal" style={`--reveal-delay: ${(i % 2) * 0.1}s`}>
+            <article
+              class="glass card"
+              id={s.id}
+              style="height: 100%; display: flex; flex-direction: column; gap: 0.9rem"
+            >
+              <div class="card__icon"><Icon /></div>
+              <h2 class="h3">{s.title}</h2>
+              <p>{s.full}</p>
+              <div class="glass" style="padding: 1rem 1.2rem; border-radius: 14px; font-size: 0.94rem">
+                <strong class="text-grad">Результат:</strong>{' '}
+                <span style="color: var(--ink-soft)">{s.result}</span>
               </div>
+              <div>
+                <div style="font-weight: 800; font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.9rem">
+                  Что входит
+                </div>
+                <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.6rem">
+                  {s.includes.map((item) => (
+                    <li style="display: flex; gap: 0.6rem; color: var(--ink-soft); font-size: 0.95rem">
+                      <span style="color: var(--cyan); font-weight: 800">✓</span>{item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <a href="/contact" class="btn btn--ghost" style="margin-top: auto">
+                Обсудить задачу <span aria-hidden="true">→</span>
+              </a>
             </article>
           </div>
           )
