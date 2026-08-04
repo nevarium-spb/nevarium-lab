@@ -1563,7 +1563,7 @@ p {
   display: flex;
   gap: 2.8rem;
   width: max-content;
-  animation: marquee 60s linear infinite;
+  animation: marquee 120s linear infinite;
 }
 
 .marquee__item {
