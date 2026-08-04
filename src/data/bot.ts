@@ -28,6 +28,7 @@ export const botNodes: Record<string, BotNode> = {
       { label: 'Чат-боты', next: 'svc_bots' },
       { label: 'Контент', next: 'svc_content' },
       { label: 'Оставить заявку', next: 'lead_name' },
+      { label: '← В начало', next: 'start' },
     ],
   },
   svc_assistants: {
@@ -110,6 +111,7 @@ export const botNodes: Record<string, BotNode> = {
       { label: 'Какие услуги?', next: 'services' },
       { label: 'Сколько стоит?', next: 'pricing' },
       { label: 'Передать эксперту', next: 'lead_name' },
+      { label: '← В начало', next: 'start' },
     ],
   },
 }
@@ -117,9 +119,11 @@ export const botNodes: Record<string, BotNode> = {
 // Простейший роутер свободного ввода по ключевым словам
 const keywordRoutes: [RegExp, string][] = [
   [/(цен|стоим|стоит|тариф|прайс|сколько|бюджет)/i, 'pricing'],
-  [/(услуг|что.*(умеете|делаете)|направлен|сайт|лендинг|разработ)/i, 'services'],
+  [/(услуг|что.*(умеете|делаете)|направлен|сайт|лендинг)/i, 'services'],
   [/(ассистент|gpt|джипити)/i, 'svc_assistants'],
-  [/(бот|чат-бот|чатбот)/i, 'svc_bots'],
+  // Отрицательный lookbehind — иначе «бот» матчится и внутри «разработать»,
+  // «работать», «заработать» (раз-ра-БОТ-ать), уводя в чат-боты не по делу.
+  [/чат-?бот|(?<![а-яёА-ЯЁ])бот/iu, 'svc_bots'],
   [/(контент|пост|статья|smm|смм|маркетинг|reels|рилс)/i, 'svc_content'],
   [/(воронк|лид.?магнит|прогрев)/i, 'services'],
   [/(личный бренд|позиционир)/i, 'services'],
