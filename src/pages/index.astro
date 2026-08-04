@@ -149,12 +149,12 @@ const quotes = [
           — и только потом решаем, нужен ли там ИИ.
         </Fragment>
       </SectionHead>
-      <div class="grid-3">
+      <div class="grid-2">
         {
           services.map((s, i) => {
             const Icon = s.icon
             return (
-              <div class="reveal" style={`--reveal-delay: ${(i % 3) * 0.1}s`}>
+              <div class="reveal" style={`--reveal-delay: ${(i % 2) * 0.1}s`}>
                 <article class="glass glass--hover card" style="height: 100%">
                   <div class="card__icon">
                     <Icon />

@@ -93,6 +93,9 @@ export default function ContactForm() {
           <option>Визуал и видео</option>
           <option>Обучение команды</option>
           <option>Разработка сайта</option>
+          <option>Воронки продаж и лид-магниты</option>
+          <option>Упаковка личного бренда</option>
+          <option>Сценарии для курсов и вебинаров</option>
           <option>Пока не знаю — нужен аудит</option>
         </select>
       </div>
