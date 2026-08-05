@@ -63,6 +63,25 @@ export const IconMax = ({ size = 24 }: IconProps) => (
   </svg>
 )
 
+export const IconVK = ({ size = 24 }: IconProps) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    {/* Фирменный скруглённый квадрат VK */}
+    <rect x="1" y="1" width="22" height="22" rx="7" fill="#0077FF" />
+    <text
+      x="12"
+      y="16.5"
+      textAnchor="middle"
+      fontFamily="system-ui, -apple-system, sans-serif"
+      fontSize="11"
+      fontWeight="800"
+      fill="white"
+      letterSpacing="-0.5"
+    >
+      VK
+    </text>
+  </svg>
+)
+
 export const IconPen = ({ size = 24 }: IconProps) => (
   <svg {...base(size)}>
     <path d="m14.5 4.5 5 5L8 21H3v-5L14.5 4.5Z" />

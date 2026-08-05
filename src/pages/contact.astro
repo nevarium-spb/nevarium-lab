@@ -4,7 +4,7 @@
 // статичны; интерактивна только форма — она вынесена в ContactForm.tsx.
 import Base from '../layouts/Base.astro'
 import ContactForm from '../components/ContactForm'
-import { IconMail, IconMax, IconClock } from '../data/icons'
+import { IconMail, IconMax, IconVK, IconClock } from '../data/icons'
 ---
 
 <Base
@@ -59,6 +59,22 @@ import { IconMail, IconMax, IconClock } from '../data/icons'
                 rel="noreferrer"
               >
                 Мы в MAX
+              </a>
+            </div>
+          </div>
+          <div class="contact-info__row">
+            <div class="card__icon">
+              <IconVK />
+            </div>
+            <div>
+              <div class="contact-info__label">VK</div>
+              <a
+                class="contact-info__value"
+                href="https://vk.ru/nevarium_lab"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Мы в VK
               </a>
             </div>
           </div>
