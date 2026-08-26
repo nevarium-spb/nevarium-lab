@@ -118,6 +118,24 @@ export default function ContactForm() {
         aria-hidden="true"
         style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
       />
+      <label
+        style={{
+          display: 'flex',
+          gap: '0.6rem',
+          alignItems: 'flex-start',
+          fontSize: '0.85rem',
+          color: 'var(--ink-faint)',
+          cursor: 'pointer',
+        }}
+      >
+        <input type="checkbox" name="consent" required style={{ marginTop: '0.2rem', flexShrink: 0 }} />
+        <span>
+          Даю согласие на{' '}
+          <a href="/privacy" style={{ color: 'inherit', textDecoration: 'underline' }}>
+            обработку персональных данных
+          </a>
+        </span>
+      </label>
       <button type="submit" className="btn btn--primary btn--lg" disabled={status === 'sending'}>
         {status === 'sending' ? 'Отправляем…' : 'Отправить заявку'}
       </button>
@@ -131,11 +149,7 @@ export default function ContactForm() {
         </p>
       )}
       <p style={{ fontSize: '0.8rem', color: 'var(--ink-faint)' }}>
-        Нажимая кнопку, вы соглашаетесь на{' '}
-        <a href="/privacy" style={{ color: 'inherit', textDecoration: 'underline' }}>
-          обработку персональных данных
-        </a>
-        . Всё, что вы расскажете о своих процессах, остаётся между нами — работаем по NDA.
+        Всё, что вы расскажете о своих процессах, остаётся между нами — работаем по NDA.
       </p>
     </form>
   )
