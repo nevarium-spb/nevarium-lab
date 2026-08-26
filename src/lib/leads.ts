@@ -35,6 +35,8 @@ export type Lead = {
   source?: 'form' | 'chat'
   /** Ловушка для ботов: люди это поле не видят и не заполняют. */
   website?: string
+  /** true, только если это отправлено после явного действия (чекбокс/кнопка) — не по умолчанию. */
+  consent: true
 }
 
 export async function sendLead(lead: Lead): Promise<void> {
@@ -58,6 +60,8 @@ export type PdRequest = {
   note?: string
   /** Ловушка для ботов. */
   website?: string
+  /** true, только если это отправлено после явного действия (чекбокс) — не по умолчанию. */
+  consent: true
 }
 
 /**
