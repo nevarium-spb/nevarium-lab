@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useRef, useState, type FormEvent } from 'react'
 import { sendPdRequest, type PdKind } from '../lib/leads'
 
 // Форма запроса по персональным данным для страницы политики (152-ФЗ, п.7).
@@ -20,24 +20,37 @@ const KINDS: { value: PdKind; label: string }[] = [
 
 export default function PdRequestForm() {
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+  const sendingRef = useRef(false) // синхронный флаг: state обновится только на следующий рендер
+
+  const kindRef = useRef<HTMLSelectElement>(null)
+  const contactRef = useRef<HTMLInputElement>(null)
+  const noteRef = useRef<HTMLTextAreaElement>(null)
+  const consentRef = useRef<HTMLInputElement>(null)
+  const websiteRef = useRef<HTMLInputElement>(null)
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (status === 'sending') return // защита от двойного клика
-    const form = new FormData(e.currentTarget)
+    // Личные поля намеренно без name — см. пояснение в ContactForm.tsx:
+    // form.submit() в обход React игнорирует и onSubmit, и constraint
+    // validation, и ушёл бы нативным GET с полями формы в query-строке.
+    if (sendingRef.current || !consentRef.current?.checked) return
+    sendingRef.current = true
     setStatus('sending')
     try {
       await sendPdRequest({
-        contact: String(form.get('contact') || ''),
-        kind: String(form.get('kind') || 'delete') as PdKind,
-        note: String(form.get('note') || ''),
-        website: String(form.get('website') || ''), // ловушка для ботов
+        contact: contactRef.current?.value || '',
+        kind: (kindRef.current?.value || 'delete') as PdKind,
+        note: noteRef.current?.value || '',
+        website: websiteRef.current?.value || '', // ловушка для ботов
+        consent: true,
       })
       setStatus('sent')
     } catch {
       // Экран успеха тут был бы прямым обманом: человек будет ждать ответа
       // в срок, которого никто не получил. Показываем почту.
       setStatus('error')
+    } finally {
+      sendingRef.current = false
     }
   }
 
@@ -57,7 +70,7 @@ export default function PdRequestForm() {
     <form className="form" onSubmit={onSubmit}>
       <div>
         <label htmlFor="pd-kind">Что сделать с вашими данными *</label>
-        <select id="pd-kind" name="kind" defaultValue="delete">
+        <select id="pd-kind" ref={kindRef} defaultValue="delete">
           {KINDS.map((k) => (
             <option key={k.value} value={k.value}>
               {k.label}
@@ -69,7 +82,7 @@ export default function PdRequestForm() {
         <label htmlFor="pd-contact">Почта или телефон, которые вы нам оставляли *</label>
         <input
           id="pd-contact"
-          name="contact"
+          ref={contactRef}
           required
           maxLength={254}
           placeholder="ivan@example.ru или +7 900 000-00-00"
@@ -84,16 +97,18 @@ export default function PdRequestForm() {
         <label htmlFor="pd-note">Пояснение, если нужно</label>
         <textarea
           id="pd-note"
-          name="note"
+          ref={noteRef}
           rows={3}
           maxLength={2000}
           placeholder="Например: какие именно данные исправить"
         />
       </div>
-      {/* Ловушка для ботов: человек это поле не видит, автозаполнение выключено */}
+      {/* Ловушка для ботов: человек это поле не видит, автозаполнение выключено.
+          name оставлен намеренно — см. пояснение в ContactForm.tsx. */}
       <input
         type="text"
         name="website"
+        ref={websiteRef}
         tabIndex={-1}
         autoComplete="off"
         aria-hidden="true"
@@ -109,7 +124,7 @@ export default function PdRequestForm() {
           cursor: 'pointer',
         }}
       >
-        <input type="checkbox" name="consent" required style={{ marginTop: '0.2rem', flexShrink: 0 }} />
+        <input type="checkbox" ref={consentRef} required style={{ marginTop: '0.2rem', flexShrink: 0 }} />
         <span>
           Даю согласие на{' '}
           <a href="/privacy" style={{ color: 'inherit', textDecoration: 'underline' }}>

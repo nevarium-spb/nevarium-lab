@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useRef, useState, type FormEvent } from 'react'
 import { sendLead } from '../lib/leads'
 import { IconCheck } from '../data/icons'
 
@@ -12,26 +12,43 @@ const MAX_LINK = 'https://max.ru/join/4u3kB47o-53REUPLuMBIl2uHDiMAmAFto24mxJ1wgn
 export default function ContactForm() {
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const sent = status === 'sent'
+  const sendingRef = useRef(false) // синхронный флаг: state обновится только на следующий рендер
+
+  const nameRef = useRef<HTMLInputElement>(null)
+  const contactRef = useRef<HTMLInputElement>(null)
+  const topicRef = useRef<HTMLSelectElement>(null)
+  const messageRef = useRef<HTMLTextAreaElement>(null)
+  const consentRef = useRef<HTMLInputElement>(null)
+  const websiteRef = useRef<HTMLInputElement>(null)
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (status === 'sending') return // защита от двойного клика
-    const form = new FormData(e.currentTarget)
+    // Личные поля намеренно без name — обычный <input> без React серьёзно
+    // отличается от form.submit(): последний игнорирует onSubmit и constraint
+    // validation целиком и уходит нативным GET на текущий URL с полями формы
+    // в query-строке (это и есть уязвимость, а не типографика). Без name эти
+    // поля не попадут в такую подстановку, даже если submit() вызвать в обход
+    // React напрямую из консоли/чужого скрипта.
+    if (sendingRef.current || !consentRef.current?.checked) return
+    sendingRef.current = true
     setStatus('sending')
     try {
       await sendLead({
-        name: String(form.get('name') || ''),
-        contact: String(form.get('contact') || ''),
-        task: String(form.get('topic') || ''),
-        note: String(form.get('message') || ''),
+        name: nameRef.current?.value || '',
+        contact: contactRef.current?.value || '',
+        task: topicRef.current?.value || '',
+        note: messageRef.current?.value || '',
         source: 'form',
-        website: String(form.get('website') || ''), // ловушка для ботов
+        website: websiteRef.current?.value || '', // ловушка для ботов
+        consent: true,
       })
       setStatus('sent')
     } catch {
       // Экран успеха здесь был бы обманом: заявка не дошла. Показываем прямой
       // способ связи, чтобы человек не ушёл ни с чем.
       setStatus('error')
+    } finally {
+      sendingRef.current = false
     }
   }
 
@@ -61,7 +78,7 @@ export default function ContactForm() {
           <label htmlFor="cf-name">Ваше имя *</label>
           <input
             id="cf-name"
-            name="name"
+            ref={nameRef}
             required
             maxLength={100}
             placeholder="Как к вам обращаться"
@@ -72,7 +89,7 @@ export default function ContactForm() {
           <label htmlFor="cf-contact">Телефон или Max *</label>
           <input
             id="cf-contact"
-            name="contact"
+            ref={contactRef}
             required
             maxLength={254}
             placeholder="+7 900 000-00-00 или ник в Max"
@@ -82,7 +99,7 @@ export default function ContactForm() {
       </div>
       <div>
         <label htmlFor="cf-topic">Что хотите автоматизировать?</label>
-        <select id="cf-topic" name="topic" defaultValue="">
+        <select id="cf-topic" ref={topicRef} defaultValue="">
           <option value="" disabled>
             Выберите направление
           </option>
@@ -103,16 +120,19 @@ export default function ContactForm() {
         <label htmlFor="cf-msg">Пара слов о ситуации</label>
         <textarea
           id="cf-msg"
-          name="message"
+          ref={messageRef}
           rows={4}
           maxLength={2000}
           placeholder="Например: менеджеры отвечают на одни и те же вопросы клиентов…"
         />
       </div>
-      {/* Ловушка для ботов: человек это поле не видит, автозаполнение выключено */}
+      {/* Ловушка для ботов: человек это поле не видит, автозаполнение выключено.
+          name оставлен намеренно — анти-спам библиотеки ищут поля по типовым
+          именам вроде "website"; сам он всегда пуст, значения человека не несёт. */}
       <input
         type="text"
         name="website"
+        ref={websiteRef}
         tabIndex={-1}
         autoComplete="off"
         aria-hidden="true"
@@ -128,7 +148,7 @@ export default function ContactForm() {
           cursor: 'pointer',
         }}
       >
-        <input type="checkbox" name="consent" required style={{ marginTop: '0.2rem', flexShrink: 0 }} />
+        <input type="checkbox" ref={consentRef} required style={{ marginTop: '0.2rem', flexShrink: 0 }} />
         <span>
           Даю согласие на{' '}
           <a href="/privacy" style={{ color: 'inherit', textDecoration: 'underline' }}>

@@ -16,7 +16,7 @@
         { "key": "X-Frame-Options", "value": "DENY" },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://crm-nevarium.ru; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://crm-nevarium.ru; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
         }
       ]
     }

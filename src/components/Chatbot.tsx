@@ -77,13 +77,20 @@ export default function Chatbot() {
 
   useEffect(() => () => clearTimeout(timerRef.current), [])
 
-  const speak = (id: string, name = leadName) => {
+  // vars переопределяет {name}/{contact} свежим значением из места вызова —
+  // не читает leadName/pendingContact из state напрямую, потому что React
+  // обновляет state асинхронно: сразу после setPendingContact(text) в этом же
+  // рендере state ещё старый, и подстановка показала бы предыдущий контакт.
+  const speak = (id: string, vars: Record<string, string> = {}) => {
     const next = botNodes[id] ?? botNodes.fallback
+    const merged = { name: leadName, contact: pendingContact, ...vars }
     setTyping(true)
     clearTimeout(timerRef.current)
     timerRef.current = setTimeout(() => {
       setTyping(false)
-      setMessages((m) => [...m, { from: 'bot', text: next.text.replace('{name}', name) }])
+      let text = next.text
+      for (const [k, v] of Object.entries(merged)) text = text.replaceAll(`{${k}}`, v)
+      setMessages((m) => [...m, { from: 'bot', text }])
       setNodeId(next.id)
     }, 600 + Math.min(next.text.length * 6, 900))
   }
@@ -101,15 +108,19 @@ export default function Chatbot() {
       if (sendingRef.current) return
       sendingRef.current = true
       setSending(true)
-      sendLead({ name: leadName, contact: pendingContact, source: 'chat' })
+      sendLead({ name: leadName, contact: pendingContact, source: 'chat', consent: true })
         .then(() => speak('lead_done'))
         .catch(() => speak('lead_failed'))
         .finally(() => {
           sendingRef.current = false
           setSending(false)
+          setPendingContact('') // контакт использован (или отклонён CRM) — не переносить в новую попытку
         })
       return
     }
+    // «Отмена» ведёт назад на lead_phone — старый непринятый контакт не должен
+    // тихо всплыть, если человек передумает и снова дойдёт до подтверждения.
+    if (next === 'lead_phone') setPendingContact('')
     speak(next)
   }
 
@@ -121,15 +132,16 @@ export default function Chatbot() {
 
     if (node.input === 'name') {
       setLeadName(text)
-      speak('lead_phone', text)
+      speak('lead_phone', { name: text })
       return
     }
     if (node.input === 'phone') {
       // Контакт напечатан, но в CRM пока не уходит — сперва нужно явное
       // согласие отдельным действием (кнопка в lead_confirm), а не сам факт
-      // ввода контакта.
+      // ввода контакта. Показываем сам контакт в подтверждении, чтобы человек
+      // видел, что именно согласится отправить — а не подписывался вслепую.
       setPendingContact(text)
-      speak('lead_confirm')
+      speak('lead_confirm', { contact: text })
       return
     }
     speak(routeFreeText(text))
