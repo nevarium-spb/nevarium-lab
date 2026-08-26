@@ -6,3 +6,6 @@ dist/
 tsconfig.tsbuildinfo
 
 .vercel
+
+# /graphify — локальный анализ кодовой базы, легко пересоздаётся, не деплой-артефакт
+graphify-out/
