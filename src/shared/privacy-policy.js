@@ -59,7 +59,7 @@ export function consentSnapshot() {
 }
 
 const EMAILS =
-  '<a href="mailto:info@nevarium-visor.ru">info@nevarium-visor.ru</a> или ' +
+  '<a href="mailto:nvizor-spb@yandex.ru">nvizor-spb@yandex.ru</a> или ' +
   '<a href="mailto:nevarium-lab@yandex.com">nevarium-lab@yandex.com</a>'
 
 /** Разделы 1–7 до формы запроса по ПДн. Форму сайт вставляет сам. */
