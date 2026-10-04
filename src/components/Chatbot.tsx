@@ -33,6 +33,7 @@ type ChatState = {
   messages: Message[]
   nodeId: string
   leadName: string
+  pendingContact: string
 }
 
 function loadState(): ChatState | null {
@@ -50,6 +51,7 @@ export default function Chatbot() {
   const [messages, setMessages] = useState<Message[]>(saved.current?.messages ?? [])
   const [nodeId, setNodeId] = useState(saved.current?.nodeId ?? 'start')
   const [leadName, setLeadName] = useState(saved.current?.leadName ?? '')
+  const [pendingContact, setPendingContact] = useState(saved.current?.pendingContact ?? '')
   const [typing, setTyping] = useState(false)
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
@@ -61,11 +63,11 @@ export default function Chatbot() {
 
   useEffect(() => {
     try {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ messages, nodeId, leadName }))
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ messages, nodeId, leadName, pendingContact }))
     } catch {
       /* приватный режим — молча пропускаем */
     }
-  }, [messages, nodeId, leadName])
+  }, [messages, nodeId, leadName, pendingContact])
 
   useEffect(() => {
     if (bodyRef.current) {
@@ -75,13 +77,20 @@ export default function Chatbot() {
 
   useEffect(() => () => clearTimeout(timerRef.current), [])
 
-  const speak = (id: string, name = leadName) => {
+  // vars переопределяет {name}/{contact} свежим значением из места вызова —
+  // не читает leadName/pendingContact из state напрямую, потому что React
+  // обновляет state асинхронно: сразу после setPendingContact(text) в этом же
+  // рендере state ещё старый, и подстановка показала бы предыдущий контакт.
+  const speak = (id: string, vars: Record<string, string> = {}) => {
     const next = botNodes[id] ?? botNodes.fallback
+    const merged = { name: leadName, contact: pendingContact, ...vars }
     setTyping(true)
     clearTimeout(timerRef.current)
     timerRef.current = setTimeout(() => {
       setTyping(false)
-      setMessages((m) => [...m, { from: 'bot', text: next.text.replace('{name}', name) }])
+      let text = next.text
+      for (const [k, v] of Object.entries(merged)) text = text.replaceAll(`{${k}}`, v)
+      setMessages((m) => [...m, { from: 'bot', text }])
       setNodeId(next.id)
     }, 600 + Math.min(next.text.length * 6, 900))
   }
@@ -93,6 +102,25 @@ export default function Chatbot() {
 
   const pickQuick = (label: string, next: string) => {
     setMessages((m) => [...m, { from: 'user', text: label }])
+    // Явное согласие получено этим кликом — только теперь заявка уходит в CRM,
+    // а не в момент, когда контакт был просто напечатан.
+    if (next === 'lead_send') {
+      if (sendingRef.current) return
+      sendingRef.current = true
+      setSending(true)
+      sendLead({ name: leadName, contact: pendingContact, source: 'chat', consent: true })
+        .then(() => speak('lead_done'))
+        .catch(() => speak('lead_failed'))
+        .finally(() => {
+          sendingRef.current = false
+          setSending(false)
+          setPendingContact('') // контакт использован (или отклонён CRM) — не переносить в новую попытку
+        })
+      return
+    }
+    // «Отмена» ведёт назад на lead_phone — старый непринятый контакт не должен
+    // тихо всплыть, если человек передумает и снова дойдёт до подтверждения.
+    if (next === 'lead_phone') setPendingContact('')
     speak(next)
   }
 
@@ -104,23 +132,16 @@ export default function Chatbot() {
 
     if (node.input === 'name') {
       setLeadName(text)
-      speak('lead_phone', text)
+      speak('lead_phone', { name: text })
       return
     }
     if (node.input === 'phone') {
-      // Контакт получен — отправляем заявку в CRM. Если не дошла, говорим об этом
-      // прямо и даём прямой канал: иначе человек уйдёт, считая, что его записали.
-      // sendingRef блокирует повторный Enter, пока fetch не завершится: без него
-      // typing (только для анимации "печатает") не защищает от дублей заявки.
-      sendingRef.current = true
-      setSending(true)
-      sendLead({ name: leadName, contact: text, source: 'chat' })
-        .then(() => speak('lead_done'))
-        .catch(() => speak('lead_failed'))
-        .finally(() => {
-          sendingRef.current = false
-          setSending(false)
-        })
+      // Контакт напечатан, но в CRM пока не уходит — сперва нужно явное
+      // согласие отдельным действием (кнопка в lead_confirm), а не сам факт
+      // ввода контакта. Показываем сам контакт в подтверждении, чтобы человек
+      // видел, что именно согласится отправить — а не подписывался вслепую.
+      setPendingContact(text)
+      speak('lead_confirm', { contact: text })
       return
     }
     speak(routeFreeText(text))
@@ -158,7 +179,7 @@ export default function Chatbot() {
             )}
           </div>
 
-          {!typing && node.quick && (
+          {!typing && !sending && node.quick && (
             <div className="chat__quick">
               {node.quick.map((q) => (
                 <button key={q.next + q.label} onClick={() => pickQuick(q.label, q.next)}>

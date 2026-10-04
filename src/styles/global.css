@@ -1226,7 +1226,7 @@ p {
   margin-bottom: 0.45rem;
 }
 
-.form input,
+.form input:not([type='checkbox']),
 .form textarea,
 .form select {
   width: 100%;
@@ -1237,6 +1237,16 @@ p {
   color: var(--ink);
   font: inherit;
   transition: border-color 0.3s, background 0.3s;
+}
+
+/* Чекбокс согласия — без этого исключения он наследует width:100% и большой
+   padding из общего правила выше (оно писалось только под текстовые поля,
+   до того как на формах появился чекбокс) и распирает строку так, что текст
+   рядом с ним схлопывается в узкую колонку. */
+.form input[type='checkbox'] {
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: var(--indigo);
 }
 
 .form input::placeholder,
