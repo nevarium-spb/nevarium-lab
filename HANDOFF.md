@@ -27,7 +27,7 @@
 2. **Уведомление в Роскомнадзор**: черновик `docs/rkn-notification-draft.md` в репозитории CRM от 2026-07-28 **устарел** (там SQLite). Нужно актуализировать и подать. Вопросы к юристу: IP в логах Vercel (Франкфурт) — спорная зона по ст.18 ч.5 и ст.12; КЭП; владелица физически не в РФ?
 3. **Деплой Визора** (см. выше).
 4. **Чистка тестовых лидов в CRM** (~11 шт., в т.ч. «ТЕСТ проверка e2e 2026-09-10», +70000000000). Telegram-бот CRM не проверялся с июля.
-5. **PR #3 (`claude/postgres-migration-plan`) частично устарел**: три документа в `docs/` (план переезда, путь Визора в прод, ТЗ на перевод CRM). Этапы 1–4 и 6 уже выполнены другими сессиями. Решение — обновить, закрыть или слить — **за владелицей**.
+5. **PR #3 (`claude/postgres-migration-plan`) актуализирован 2026-10-04**: план переезда (этапы 1–4 и 6 ✅, остались 5 и 7), путь Визора в прод, ТЗ на перевод CRM (помечено выполненным). Слить или закрыть — решает владелица.
 6. 2–3 реальных кейса с цифрами и согласием на публикацию — по-прежнему главное, что ограничивает убедительность сайта.
 
 ### Ветки и PR (не терять)
@@ -36,7 +36,7 @@
 |---|---|
 | `main` | `c69ec5b`, = origin |
 | `claude/handoff-md-review-23f316` | эта ветка, **PR #1 открыт**; содержит этот HANDOFF |
-| `claude/postgres-migration-plan` | **PR #3 открыт**, запушена (документы, частично устарели) |
+| `claude/postgres-migration-plan` | **PR #3 открыт**, запушена (документы актуализированы 2026-10-04) |
 | `claude/market-research` | **только локально, НЕ запушена**, коммит `026040a`: HANDOFF на маркетинговое исследование рынка (4 направления); перезаписывает этот HANDOFF только внутри своей ветки |
 | `G:\nevarium_vizor` | незакоммиченные правки `src/App.jsx`, `src/data/site.js` |
 | прочие `claude/*` (astro-migration, consent-checkboxes-and-csp, rkn-hosting-migration, restore-live-background-wow, terminal-3fa0c4 и др.) | уже слиты или пустые; можно чистить через `clean_up_worktrees`, но только с согласия владелицы |
@@ -88,7 +88,7 @@
     - Чат-бот: узел `lead_confirm` («{contact}» + кнопки «Отправить»/«Отмена»), `sendLead` вызывается только при `next === 'lead_send'`.
     - `vercel.json`: HSTS, nosniff, Referrer-Policy, Permissions-Policy, X-Frame-Options DENY и CSP (`default-src 'self'; script-src 'self' 'unsafe-inline'; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://crm-nevarium.ru; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'`). Меняя адрес CRM — менять и `connect-src`.
     - «Рабочий стек» и «Что внутри лаборатории» на `/about` переписаны (стек = те же 19 инструментов, что в бегущей строке; просто «ChatGPT»; без «Claude by Anthropic for Excel»).
-    - На `main` после этого другие сессии правили `privacy.astro` (MAX как получатель, фото/EXIF, история тарифа Free). Политика общая для двух сайтов.
+    - На `main` после этого другие сессии правили `privacy.astro` (фото/EXIF, история тарифа Free). **Изменения CRM 2026-10-04 (ADR-017, ADR-018):** уведомления в MAX и Telegram обезличенные, бэкапа через MAX больше нет. Раздел 6 политики переписывается под это на обоих сайтах; не возвращать фразы «в MAX приходит имя/контакт» и «бэкапы через MAX». Меняя текст политики — поднимать дату редакции (на Визоре это и версия согласия `consents.version` в CRM). Политика выносится в общий модуль `src/shared/privacy-policy.js` (источник — репозиторий Визора, `npm run shared:sync`); на 2026-10-04 эта работа не закоммичена (worktree `shared-privacy`), а прод показывает старый текст.
 
 Всё перечисленное в `main`, working tree чист.
 
