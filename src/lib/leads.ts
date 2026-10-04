@@ -21,7 +21,8 @@ const TIMEOUT_MS = 10_000
 export type Lead = {
   /** Имя. Для заявок из чата может отсутствовать — подставится контакт. */
   name?: string
-  /** Телефон, почта или ник — как оставил человек. */
+  /** Телефон, нормализованный через normalizePhone (src/shared/phone.js) —
+   *  обязателен в любой заявке, по нему CRM узнаёт человека (общая политика ПДн). */
   contact: string
   /** Что нужно: направление из формы или вопрос из чата. */
   task?: string
@@ -35,9 +36,17 @@ export type Lead = {
   source?: 'form' | 'chat'
   /** Ловушка для ботов: люди это поле не видят и не заполняют. */
   website?: string
-  /** true, только если это отправлено после явного действия (чекбокс/кнопка) — не по умолчанию. */
-  consent: true
+  /**
+   * Слепок согласия (ст. 9 152-ФЗ): редакция политики, точный показанный текст и
+   * момент — consentSnapshot() из src/shared/privacy-policy.js. Раньше здесь был
+   * просто `true`, и CRM сохраняла пустое доказательство: доказывать согласие
+   * обязан оператор, а «галочка была» без текста ничего не доказывает.
+   * Создаётся только после явного действия (чекбокс/кнопка) — не по умолчанию.
+   */
+  consent: ConsentSnapshot
 }
+
+export type ConsentSnapshot = { version: string; text: string; accepted_at: string }
 
 export async function sendLead(lead: Lead): Promise<void> {
   const res = await fetch(`${API}/api/leads`, {
@@ -53,7 +62,8 @@ export async function sendLead(lead: Lead): Promise<void> {
 export type PdKind = 'access' | 'correct' | 'delete' | 'stop'
 
 export type PdRequest = {
-  /** Почта или телефон, по которым человека можно найти в базе и ответить ему. */
+  /** Нормализованный телефон, по которому человека можно найти в базе; почта —
+   *  только у тех, кто писал лишь на почту. */
   contact: string
   kind: PdKind
   /** Пояснение в свободной форме, необязательно. */

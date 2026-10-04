@@ -1,5 +1,7 @@
 import { useRef, useState, type FormEvent } from 'react'
 import { sendLead } from '../lib/leads'
+import { normalizePhone } from '../shared/phone.js'
+import { CONSENT_PARTS, consentSnapshot } from '../shared/privacy-policy.js'
 import { IconCheck } from '../data/icons'
 
 const MAX_LINK = 'https://max.ru/join/4u3kB47o-53REUPLuMBIl2uHDiMAmAFto24mxJ1wgnk'
@@ -11,6 +13,7 @@ const MAX_LINK = 'https://max.ru/join/4u3kB47o-53REUPLuMBIl2uHDiMAmAFto24mxJ1wgn
  */
 export default function ContactForm() {
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+  const [phoneError, setPhoneError] = useState('')
   const sent = status === 'sent'
   const sendingRef = useRef(false) // синхронный флаг: state обновится только на следующий рендер
 
@@ -30,17 +33,26 @@ export default function ContactForm() {
     // поля не попадут в такую подстановку, даже если submit() вызвать в обход
     // React напрямую из консоли/чужого скрипта.
     if (sendingRef.current || !consentRef.current?.checked) return
+    // Телефон обязателен в любой заявке (общая политика ПДн): по нему CRM узнаёт
+    // человека. Ник в Max больше не принимаем — по нему не подтвердить запрос по ПДн.
+    const phone = normalizePhone(contactRef.current?.value || '')
+    if (!phone) {
+      setPhoneError('Укажите номер телефона, например +7\u00a0900\u00a0000-00-00')
+      contactRef.current?.focus()
+      return
+    }
+    setPhoneError('')
     sendingRef.current = true
     setStatus('sending')
     try {
       await sendLead({
         name: nameRef.current?.value || '',
-        contact: contactRef.current?.value || '',
+        contact: phone,
         task: topicRef.current?.value || '',
         note: messageRef.current?.value || '',
         source: 'form',
         website: websiteRef.current?.value || '', // ловушка для ботов
-        consent: true,
+        consent: consentSnapshot(),
       })
       setStatus('sent')
     } catch {
@@ -86,15 +98,24 @@ export default function ContactForm() {
           />
         </div>
         <div>
-          <label htmlFor="cf-contact">Телефон или Max *</label>
+          <label htmlFor="cf-contact">Телефон *</label>
           <input
             id="cf-contact"
             ref={contactRef}
+            type="tel"
+            inputMode="tel"
             required
-            maxLength={254}
-            placeholder="+7 900 000-00-00 или ник в Max"
+            maxLength={40}
+            placeholder="+7 900 000-00-00"
             autoComplete="tel"
+            aria-invalid={phoneError ? true : undefined}
+            aria-describedby={phoneError ? 'cf-contact-err' : undefined}
           />
+          {phoneError && (
+            <p id="cf-contact-err" role="alert" style={{ fontSize: '0.85rem', color: '#fca5a5', margin: '0.4rem 0 0' }}>
+              {phoneError}
+            </p>
+          )}
         </div>
       </div>
       <div>
@@ -149,11 +170,13 @@ export default function ContactForm() {
         }}
       >
         <input type="checkbox" ref={consentRef} required style={{ marginTop: '0.2rem', flexShrink: 0 }} />
+        {/* Ровно CONSENT_TEXT — тот же текст уходит в CRM как доказательство согласия. */}
         <span>
-          Даю согласие на{' '}
+          {CONSENT_PARTS[0]}
           <a href="/privacy" style={{ color: 'inherit', textDecoration: 'underline' }}>
-            обработку персональных данных
+            {CONSENT_PARTS[1]}
           </a>
+          {CONSENT_PARTS[2]}
         </span>
       </label>
       <button type="submit" className="btn btn--primary btn--lg" disabled={status === 'sending'}>

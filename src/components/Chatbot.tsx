@@ -1,17 +1,21 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { botNodes, routeFreeText } from '../data/bot'
 import { sendLead } from '../lib/leads'
+import { normalizePhone } from '../shared/phone.js'
+import { CONSENT_PARTS, consentSnapshot } from '../shared/privacy-policy.js'
 import { IconBot, IconChat, IconClose, IconSend } from '../data/icons'
 
 type Message = { from: 'bot' | 'user'; text: string }
 
 /**
- * Ссылку на политику в тексте узла lead_phone (bot.ts) раньше выводили как
- * обычный текст "(/privacy)" — не кликабельную. Слова не меняем, только
- * превращаем этот фрагмент в настоящую ссылку.
+ * В тексте согласия (узел lead_confirm, bot.ts) название политики делаем
+ * ссылкой. Слова не меняем — человек видит ровно CONSENT_TEXT, который потом
+ * уходит в CRM как доказательство.
  */
+const POLICY_LINK_TEXT = CONSENT_PARTS[1]
+
 function renderMessage(text: string): ReactNode {
-  const parts = text.split('/privacy')
+  const parts = text.split(POLICY_LINK_TEXT)
   if (parts.length === 1) return text
   const nodes: ReactNode[] = []
   parts.forEach((part, i) => {
@@ -19,7 +23,7 @@ function renderMessage(text: string): ReactNode {
     if (i < parts.length - 1) {
       nodes.push(
         <a key={i} href="/privacy" style={{ color: 'inherit', textDecoration: 'underline' }}>
-          /privacy
+          {POLICY_LINK_TEXT}
         </a>,
       )
     }
@@ -108,7 +112,7 @@ export default function Chatbot() {
       if (sendingRef.current) return
       sendingRef.current = true
       setSending(true)
-      sendLead({ name: leadName, contact: pendingContact, source: 'chat', consent: true })
+      sendLead({ name: leadName, contact: pendingContact, source: 'chat', consent: consentSnapshot() })
         .then(() => speak('lead_done'))
         .catch(() => speak('lead_failed'))
         .finally(() => {
@@ -136,12 +140,18 @@ export default function Chatbot() {
       return
     }
     if (node.input === 'phone') {
+      // Телефон обязателен (общая политика ПДн) — без него заявку не принимаем.
+      const phone = normalizePhone(text)
+      if (!phone) {
+        speak('lead_phone_invalid')
+        return
+      }
       // Контакт напечатан, но в CRM пока не уходит — сперва нужно явное
       // согласие отдельным действием (кнопка в lead_confirm), а не сам факт
-      // ввода контакта. Показываем сам контакт в подтверждении, чтобы человек
+      // ввода контакта. Показываем сам номер в подтверждении, чтобы человек
       // видел, что именно согласится отправить — а не подписывался вслепую.
-      setPendingContact(text)
-      speak('lead_confirm', { contact: text })
+      setPendingContact(phone)
+      speak('lead_confirm', { contact: phone })
       return
     }
     speak(routeFreeText(text))
@@ -232,7 +242,7 @@ export default function Chatbot() {
                   : node.input === 'name'
                     ? 'Ваше имя…'
                     : node.input === 'phone'
-                      ? '+7 900 000-00-00 или ник в Max'
+                      ? '+7 900 000-00-00'
                       : 'Напишите вопрос…'
               }
               aria-label="Сообщение для ассистента"
