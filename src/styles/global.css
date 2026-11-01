@@ -128,6 +128,7 @@
   --stroke-bright: rgba(23, 26, 58, 0.18);
 
   /* На светлом фоне яркий sky нечитаем как текст — берём плотнее */
+  --sky: var(--cobalt);
   --grad-accent: linear-gradient(100deg, #4f46e5, #7c3aed 60%, #6366f1);
 
   --shadow-glass: 0 20px 50px -26px rgba(30, 41, 120, 0.28);
