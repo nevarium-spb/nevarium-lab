@@ -2,6 +2,8 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": "astro",
+  "cleanUrls": true,
+  "trailingSlash": false,
   "env": {
     "NODE_ENV": "production"
   },
