@@ -1,6 +1,7 @@
 import { useRef, useState, type FormEvent } from 'react'
 import { sendLead } from '../lib/leads'
 import { IconCheck } from '../data/icons'
+import { INTAKE_OPEN } from '../data/intake'
 
 const MAX_LINK = 'https://max.ru/join/4u3kB47o-53REUPLuMBIl2uHDiMAmAFto24mxJ1wgnk'
 
@@ -50,6 +51,18 @@ export default function ContactForm() {
     } finally {
       sendingRef.current = false
     }
+  }
+
+  if (!INTAKE_OPEN) {
+    return (
+      <div className="form__success">
+        <h2 className="h3">Приём заявок через сайт временно закрыт</h2>
+        <p>Напишите нам напрямую: в MAX, на почту или позвоните — контакты на этой странице.</p>
+        <p style={{ fontSize: '0.8rem', color: 'var(--ink-faint)' }}>
+          Всё, что вы расскажете о своих процессах, остаётся между нами — работаем по NDA.
+        </p>
+      </div>
+    )
   }
 
   if (sent) {

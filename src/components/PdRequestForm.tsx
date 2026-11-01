@@ -1,5 +1,6 @@
 import { useRef, useState, type FormEvent } from 'react'
 import { sendPdRequest, type PdKind } from '../lib/leads'
+import { INTAKE_OPEN } from '../data/intake'
 
 // Форма запроса по персональным данным для страницы политики (152-ФЗ, п.7).
 // Раньше единственным способом была почта: человек писал письмо, и оно могло
@@ -52,6 +53,18 @@ export default function PdRequestForm() {
     } finally {
       sendingRef.current = false
     }
+  }
+
+  if (!INTAKE_OPEN) {
+    return (
+      <div className="form">
+        <p style={{ margin: 0 }}>
+          Форма запроса временно не работает. Напишите на{' '}
+          <a href={`mailto:${EMAIL}`}>{EMAIL}</a> — это тот же запрос, и срок исполнения тот же:
+          10 рабочих дней.
+        </p>
+      </div>
+    )
   }
 
   if (status === 'sent') {

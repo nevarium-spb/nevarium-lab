@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { botNodes, routeFreeText } from '../data/bot'
 import { sendLead } from '../lib/leads'
 import { IconBot, IconChat, IconClose, IconSend } from '../data/icons'
+import { INTAKE_OPEN } from '../data/intake'
 
 type Message = { from: 'bot' | 'user'; text: string }
 
@@ -82,7 +83,10 @@ export default function Chatbot() {
   // обновляет state асинхронно: сразу после setPendingContact(text) в этом же
   // рендере state ещё старый, и подстановка показала бы предыдущий контакт.
   const speak = (id: string, vars: Record<string, string> = {}) => {
-    const next = botNodes[id] ?? botNodes.fallback
+    // Диалог мог начаться до закрытия приёма и восстановиться из sessionStorage
+    // на шаге сбора заявки — такой шаг тоже ведёт на заглушку.
+    const closed = !INTAKE_OPEN && id.startsWith('lead_')
+    const next = closed ? botNodes.intake_closed : (botNodes[id] ?? botNodes.fallback)
     const merged = { name: leadName, contact: pendingContact, ...vars }
     setTyping(true)
     clearTimeout(timerRef.current)
@@ -104,7 +108,7 @@ export default function Chatbot() {
     setMessages((m) => [...m, { from: 'user', text: label }])
     // Явное согласие получено этим кликом — только теперь заявка уходит в CRM,
     // а не в момент, когда контакт был просто напечатан.
-    if (next === 'lead_send') {
+    if (next === 'lead_send' && INTAKE_OPEN) {
       if (sendingRef.current) return
       sendingRef.current = true
       setSending(true)
@@ -186,7 +190,7 @@ export default function Chatbot() {
                   {q.label}
                 </button>
               ))}
-              {nodeId === 'lead_done' && (
+              {(nodeId === 'lead_done' || nodeId === 'intake_closed') && (
                 <a
                   href="https://max.ru/@nevarium"
                   target="_blank"
